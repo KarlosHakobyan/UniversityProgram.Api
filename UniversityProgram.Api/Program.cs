@@ -11,7 +11,7 @@ namespace UniversityProgram.Api
         {
             var builder = WebApplication.CreateBuilder(args);                    
             builder.Services.AddControllers();
-                  builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<StudentDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("StudentDb")));
             builder.Services.AddScoped<CourseBankSeviceApi>();

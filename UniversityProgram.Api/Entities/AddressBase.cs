@@ -1,12 +1,10 @@
 ﻿namespace UniversityProgram.Api.Entities
 {
-    public class CourseStudent
+    public class AddressBase
     {
         public int Id { get; set; }
-        public int CourseId { get; set; }
+        public string Address { get; set; } = default!;
         public int StudentId { get; set; }
-        public Course Course { get; set; } = default!;
         public StudentBase Student { get; set; } = default!;
-        public bool Paid { get; set; }
     }
 }

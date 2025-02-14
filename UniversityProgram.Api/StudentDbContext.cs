@@ -5,33 +5,34 @@ namespace UniversityProgram.Api
 {
     public class StudentDbContext : DbContext
     {
-        public DbSet<Student> Students { get; set; } = default!;
+        public DbSet<StudentBase> Students { get; set; } = default!;
         public DbSet<Laptop> Laptops { get; set; } = default!;
         public DbSet<Cpu> Cpu { get; set; } = default!;
         public DbSet<Library> Libraries { get; set; } = default!;
         public DbSet<University> Universities{ get; set; } = default!;
         public DbSet<Course> Courses{ get; set; } = default!;
-        
+        public DbSet<AddressBase> Address { get; set; } = default!;
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Student>()
+            modelBuilder.Entity<StudentBase>()
             .HasKey(e => e.Id);
 
-            modelBuilder.Entity<Student>()
+            modelBuilder.Entity<StudentBase>()
             .Property(e => e.Name)
             .HasColumnType("nvarchar")
             .HasMaxLength(50)
             .IsRequired();
 
-            modelBuilder.Entity<Student>()
+            modelBuilder.Entity<StudentBase>()
             .Property(e => e.Email)
             .HasColumnType("nvarchar")
             .IsRequired()
             .HasMaxLength(100);
-            modelBuilder.Entity<Student>().HasIndex(e => e.Email).IsUnique();
+            modelBuilder.Entity<StudentBase>().HasIndex(e => e.Email).IsUnique();
 
             modelBuilder.Entity<Laptop>().HasKey(e => e.Id);
             modelBuilder.Entity<Laptop>()
@@ -39,7 +40,7 @@ namespace UniversityProgram.Api
             .HasMaxLength(50)
             .IsRequired();
 
-            modelBuilder.Entity<Student>().HasOne(e => e.Laptop)
+            modelBuilder.Entity<StudentBase>().HasOne(e => e.Laptop)
             .WithOne(e => e.Student)
             .HasForeignKey<Laptop>(e => e.StudentId);     // MEKY MEKIN KAP 
 
@@ -58,7 +59,7 @@ namespace UniversityProgram.Api
             .Property(e => e.Name)
             .HasMaxLength(50)
             .IsRequired();
-            modelBuilder.Entity<Student>().HasOne(e => e.Library)
+            modelBuilder.Entity<StudentBase>().HasOne(e => e.Library)
             .WithMany(e => e.Students)
             .HasForeignKey(e=>e.LibraryId);
 
@@ -79,8 +80,18 @@ namespace UniversityProgram.Api
 
             modelBuilder.Entity<Course>().HasMany(e => e.CourseStudents).WithOne(e => e.Course)
             .HasForeignKey(e => e.CourseId);
-            modelBuilder.Entity<Student>().HasMany(e => e.CourseStudents).WithOne(e => e.Student)
+            modelBuilder.Entity<StudentBase>().HasMany(e => e.CourseStudents).WithOne(e => e.Student)
             .HasForeignKey(e => e.StudentId);
+
+            modelBuilder.Entity<AddressBase>().HasKey(e => e.Id);
+            modelBuilder.Entity<AddressBase>()
+            .Property(e => e.Address)
+            .HasMaxLength(50)
+            .IsRequired();
+
+            modelBuilder.Entity<StudentBase>().HasOne(e => e.Address) // MEKY MEKIN KAP
+           .WithOne(e => e.Student)
+           .HasForeignKey<AddressBase>(e => e.StudentId);
 
         }
             public StudentDbContext(DbContextOptions<StudentDbContext> options) : base(options)

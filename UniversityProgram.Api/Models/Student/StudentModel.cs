@@ -1,4 +1,5 @@
-﻿using UniversityProgram.Api.Models.Laptop;
+﻿using UniversityProgram.Api.Models.Address;
+using UniversityProgram.Api.Models.Laptop;
 
 namespace UniversityProgram.Api.Models.Student
 {
@@ -10,5 +11,6 @@ namespace UniversityProgram.Api.Models.Student
         public decimal Money { get; set; }
 
         public LaptopModel Laptop { get; set; } = default!;
+        
     }
 }

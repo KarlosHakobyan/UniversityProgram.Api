@@ -8,7 +8,7 @@ namespace UniversityProgram.Api.Map
 {
     public static class StudentMap
     {
-        public static StudentWithLaptopModel MapToStudentWithLaptop(this Student student)
+        public static StudentWithLaptopModel MapToStudentWithLaptop(this StudentBase student)
         { 
             return new StudentWithLaptopModel
             {
@@ -30,7 +30,7 @@ namespace UniversityProgram.Api.Map
 
             };
         }
-        public static StudentModel Map(this Student student)
+        public static StudentModel Map(this StudentBase student)
         { 
             return new StudentModel
             {
@@ -41,9 +41,9 @@ namespace UniversityProgram.Api.Map
             };
         }
 
-        public static Student Map(this StudentAddModel student)
+        public static StudentBase Map(this StudentAddModel student)
         {
-            return new Student
+            return new StudentBase
             {
                 Name = student.Name,
                 Email = student.Email
@@ -51,7 +51,7 @@ namespace UniversityProgram.Api.Map
             };
         }
 
-        public static StudentWithCourseModel MapStudentWithCourseModel(this Student student)
+        public static StudentWithCourseModel MapStudentWithCourseModel(this StudentBase student)
         {
             var models = student.CourseStudents.Select(e => new CourseModel()
             {

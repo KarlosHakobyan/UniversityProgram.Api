@@ -48,7 +48,8 @@ namespace UniversityProgram.Api.Controllers
                     }
                 }
             };
-
+            /*_ctx.Students.Add(student);
+            await _ctx.SaveChangesAsync(cancellationToken);*/
             return Ok(model);
         }
 
