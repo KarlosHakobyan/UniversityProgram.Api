@@ -22,6 +22,7 @@ namespace UniversityProgram.Api.Controllers
             _ctx = ctx;
         }
 
+        #region HTTPPOST`s
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] StudentAddModel model, CancellationToken cancellationToken)
         {
@@ -31,6 +32,29 @@ namespace UniversityProgram.Api.Controllers
             return Ok();
         }
 
+        [HttpPost("/Student/add_with_laptop")]
+        public async Task<IActionResult> AddStudentWithLaptop([FromBody] StudentModel student, CancellationToken cancellationToken)
+        {
+            var model = new StudentWithLaptopAddModel
+            {
+                Student = new StudentModel
+                {
+                    Name = student.Name,
+                    Email = student.Email,
+                    Laptop = student.Laptop == null ? null : new LaptopModel
+                    {
+                        Id = student.Laptop.Id,
+                        Name = student.Laptop.Name
+                    }
+                }
+            };
+
+            return Ok(model);
+        }
+
+        #endregion
+
+        #region HPPTGET`s
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
@@ -78,6 +102,52 @@ namespace UniversityProgram.Api.Controllers
 
             return Ok(student.MapStudentWithCourseModel());
         }
+
+        [HttpGet("with_laptop")]
+        public async Task<IActionResult> GetAllStudentWithLaptop(CancellationToken cancellationToken)
+        {
+            var students = await _ctx.Students
+                .Include(e => e.Laptop)
+                .ToListAsync(cancellationToken);
+
+            if (students == null || students.Count == 0)
+            {
+                return NotFound();
+            }
+
+            var studentModels = students.Select(student => new StudentWithLaptopModel
+            {
+                Id = student.Id,
+                Name = student.Name,
+                Email = student.Email,
+                Laptop = student.Laptop is not null
+                    ? new LaptopWithCpuModel
+                    {
+                        Id = student.Laptop.Id,
+                        Name = student.Laptop.Name,
+                    }
+                    : null
+            }).ToList();
+
+            return Ok(studentModels);
+        }
+
+
+        [HttpGet("{Id}/with_laptop")]
+        public async Task<IActionResult> GetById_StudentWithLaptop([FromRoute] int Id, CancellationToken cancellationToken)
+        {
+            var student = await _ctx.Students.Include(e => e.Laptop)
+                .FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(student.MapToStudentWithLaptop());
+        }
+        #endregion
+
+        #region HTTPPUT`s
 
         [HttpPut("{Id}")]
         public async Task<IActionResult> Update([FromRoute] int Id, [FromBody] StudentUpdateModel model, CancellationToken cancellationToken)
@@ -173,6 +243,32 @@ namespace UniversityProgram.Api.Controllers
             return Ok();
         }
 
+        [HttpPut("{Id}/update_swl")]
+        public async Task<IActionResult> UpdateById_StudentWithLaptop([FromRoute] int Id, [FromBody] StudentWithLaptopUpdateModel studentModel, CancellationToken cancellationToken)
+        {
+            var student = await _ctx.Students
+                .Include(e => e.Laptop)
+                .FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+
+            student.Name = studentModel.Name;
+            student.Email = studentModel.Email;
+            student.Laptop.Name = studentModel.Laptop.Name;
+
+            await _ctx.SaveChangesAsync(cancellationToken);
+
+            return Ok(studentModel);
+        }
+
+        #endregion
+
+        #region HTTPDELETE`s
+
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete([FromRoute] int Id, CancellationToken cancellationToken)
         {
@@ -185,93 +281,7 @@ namespace UniversityProgram.Api.Controllers
             await _ctx.SaveChangesAsync(cancellationToken);
             return Ok();
         }
-
-        [HttpPost("/Student/add_with_laptop")]
-        public async Task<IActionResult> AddStudentWithLaptop([FromBody] StudentModel student, CancellationToken cancellationToken)
-        {
-            var model = new StudentWithLaptopAddModel
-            {
-                Student = new StudentModel
-                {
-                    Name = student.Name,
-                    Email = student.Email,
-                    Laptop = student.Laptop == null ? null : new LaptopModel
-                    {
-                        Id = student.Laptop.Id,
-                        Name = student.Laptop.Name
-                    }
-                }
-            };
-
-            return Ok(model);
-        }
-
-        [HttpGet("with_laptop")]
-        public async Task<IActionResult> GetAllStudentWithLaptop(CancellationToken cancellationToken)
-        {
-            var students = await _ctx.Students
-                .Include(e => e.Laptop)
-                .ToListAsync(cancellationToken);
-
-            if (students == null || students.Count == 0)
-            {
-                return NotFound();
-            }
-
-            var studentModels = students.Select(student => new StudentWithLaptopModel
-            {
-                Id = student.Id,
-                Name = student.Name,
-                Email = student.Email,
-                Laptop = student.Laptop is not null
-                    ? new LaptopWithCpuModel
-                    {
-                        Id = student.Laptop.Id,
-                        Name = student.Laptop.Name,
-                    }
-                    : null
-            }).ToList();
-
-            return Ok(studentModels);
-        }
-
-
-        [HttpGet("{Id}/with_laptop")]
-        public async Task<IActionResult> GetById_StudentWithLaptop([FromRoute] int Id, CancellationToken cancellationToken)
-        {
-            var student = await _ctx.Students.Include(e => e.Laptop)
-                .FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
-            if (student == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(student.MapToStudentWithLaptop());
-        }
-
-        [HttpPut("{Id}/update_swl")]
-        public async Task<IActionResult> UpdateById_StudentWithLaptop([FromRoute] int Id, [FromBody] StudentWithLaptopUpdateModel studentModel,CancellationToken cancellationToken)
-        {
-            var student = await _ctx.Students
-                .Include(e => e.Laptop)
-                .FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
-
-            if (student == null)
-            {
-                return NotFound();
-            }
-
             
-            student.Name = studentModel.Name;
-            student.Email = studentModel.Email;
-            student.Laptop.Name = studentModel.Laptop.Name;
-
-            await _ctx.SaveChangesAsync(cancellationToken);
-
-            return Ok(studentModel);
-        }
-
-
         [HttpDelete("{Id}/with_laptop")]
         public async Task<IActionResult> Delete_StudentWithLaptop([FromRoute] int Id, CancellationToken cancellationToken)
         {
@@ -284,6 +294,21 @@ namespace UniversityProgram.Api.Controllers
             await _ctx.SaveChangesAsync(cancellationToken);
             return Ok();
         }
+        #endregion
 
+
+
+        /* 
+        * ID ov get anelu urish tarberak
+        * [HttpGet]
+        public async Task<IActionResult> GetById(int Id)
+        {
+            var students = await _ctx.Students.FindAsync(Id);
+            if (students == null)
+        {
+                return NotFound();
+            }
+            return Ok(students);
+        }*/
     }
 }
