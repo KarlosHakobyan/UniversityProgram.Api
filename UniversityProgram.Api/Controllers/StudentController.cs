@@ -185,26 +185,105 @@ namespace UniversityProgram.Api.Controllers
             await _ctx.SaveChangesAsync(cancellationToken);
             return Ok();
         }
-    
 
-
-
-
-
-
-
-
-        /* 
-        * ID ov get anelu urish tarberak
-        * [HttpGet]
-        public async Task<IActionResult> GetById(int Id)
+        [HttpPost("/Student/add_with_laptop")]
+        public async Task<IActionResult> AddStudentWithLaptop([FromBody] StudentModel student, CancellationToken cancellationToken)
         {
-            var students = await _ctx.Students.FindAsync(Id);
-            if (students == null)
+            var model = new StudentWithLaptopAddModel
+            {
+                Student = new StudentModel
+                {
+                    Name = student.Name,
+                    Email = student.Email,
+                    Laptop = student.Laptop == null ? null : new LaptopModel
+                    {
+                        Id = student.Laptop.Id,
+                        Name = student.Laptop.Name
+                    }
+                }
+            };
+
+            return Ok(model);
+        }
+
+        [HttpGet("with_laptop")]
+        public async Task<IActionResult> GetAllStudentWithLaptop(CancellationToken cancellationToken)
+        {
+            var students = await _ctx.Students
+                .Include(e => e.Laptop)
+                .ToListAsync(cancellationToken);
+
+            if (students == null || students.Count == 0)
             {
                 return NotFound();
             }
-            return Ok(students);
-        }*/
+
+            var studentModels = students.Select(student => new StudentWithLaptopModel
+            {
+                Id = student.Id,
+                Name = student.Name,
+                Email = student.Email,
+                Laptop = student.Laptop is not null
+                    ? new LaptopWithCpuModel
+                    {
+                        Id = student.Laptop.Id,
+                        Name = student.Laptop.Name,
+                    }
+                    : null
+            }).ToList();
+
+            return Ok(studentModels);
+        }
+
+
+        [HttpGet("{Id}/with_laptop")]
+        public async Task<IActionResult> GetById_StudentWithLaptop([FromRoute] int Id, CancellationToken cancellationToken)
+        {
+            var student = await _ctx.Students.Include(e => e.Laptop)
+                .FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(student.MapToStudentWithLaptop());
+        }
+
+        [HttpPut("{Id}/update_swl")]
+        public async Task<IActionResult> UpdateById_StudentWithLaptop([FromRoute] int Id, [FromBody] StudentWithLaptopUpdateModel studentModel,CancellationToken cancellationToken)
+        {
+            var student = await _ctx.Students
+                .Include(e => e.Laptop)
+                .FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            
+            student.Name = studentModel.Name;
+            student.Email = studentModel.Email;
+            student.Laptop.Name = studentModel.Laptop.Name;
+
+            await _ctx.SaveChangesAsync(cancellationToken);
+
+            return Ok(studentModel);
+        }
+
+
+        [HttpDelete("{Id}/with_laptop")]
+        public async Task<IActionResult> Delete_StudentWithLaptop([FromRoute] int Id, CancellationToken cancellationToken)
+        {
+            var student = await _ctx.Students.Include(e=>e.Laptop).FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
+            if (student == null)
+            {
+                return NotFound();
+            }
+            _ctx.Students.Remove(student);
+            await _ctx.SaveChangesAsync(cancellationToken);
+            return Ok();
+        }
+
     }
 }

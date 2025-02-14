@@ -11,6 +11,7 @@ namespace UniversityProgram.Api
         public DbSet<Library> Libraries { get; set; } = default!;
         public DbSet<University> Universities{ get; set; } = default!;
         public DbSet<Course> Courses{ get; set; } = default!;
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

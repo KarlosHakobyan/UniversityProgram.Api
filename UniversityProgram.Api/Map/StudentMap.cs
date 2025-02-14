@@ -71,5 +71,7 @@ namespace UniversityProgram.Api.Map
             result.Courses.AddRange(models);
             return result;
         }
+
+
     }
 }
