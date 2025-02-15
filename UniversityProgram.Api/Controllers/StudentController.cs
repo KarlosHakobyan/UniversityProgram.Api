@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Messaging;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 using UniversityProgram.Api.Entities;
@@ -165,14 +168,20 @@ namespace UniversityProgram.Api.Controllers
         }
 
         [HttpPut("{Id}/addmoney")]
-        public async Task<IActionResult> AddMoney([FromRoute] int Id, [FromQuery] decimal money, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddMoney([FromRoute] int Id, [FromQuery][Range (100,10000,ErrorMessage = "Insert value between 100-10000")] decimal money,
+            CancellationToken cancellationToken)
         {
             var student = await _ctx.Students.FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
             if (student == null)
             {
                 return NotFound();
             }
-            student.Money += money;
+
+         //   if (money < 100 || money > 10000)
+           // { return BadRequest("Insert value between 100-10000"); }
+            //Ete Queryi meji Range hanenq petqa es kirarenq vorpes stugum 
+
+                student.Money += money;
             await _ctx.SaveChangesAsync(cancellationToken);
             return Ok();
         }

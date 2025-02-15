@@ -1,4 +1,5 @@
-﻿using UniversityProgram.Api.Models.Student;
+﻿using System.ComponentModel.DataAnnotations;
+using UniversityProgram.Api.Models.Student;
 
 namespace UniversityProgram.Api.Entities
 {

@@ -12,7 +12,6 @@ namespace UniversityProgram.Api.Models.Student
         [EmailAddress(ErrorMessage = "Input correct Email address")]
         [MinLength(8, ErrorMessage = "Email must be at least 8 characters long")]
         public string Email { get; set; } = default!;
-        
         public decimal Money { get; set; }
 
         public LaptopModel Laptop { get; set; } = default!;

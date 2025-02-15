@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using UniversityProgram.Api.Entities;
 using UniversityProgram.Api.Models.Course;
@@ -39,7 +40,8 @@ namespace UniversityProgram.Api.Controllers
         {
             var course = new Course()
             {
-                Name = model.Name
+                Name = model.Name,
+                Fee = model.Fee
             };
             ctx.Courses.Add(course);
             await ctx.SaveChangesAsync(cancellationToken);
@@ -61,13 +63,14 @@ namespace UniversityProgram.Api.Controllers
         }
 
         [HttpPut("{Id}/Fee")]
-        public async Task<IActionResult> UpdateFee([FromRoute] int Id, [FromQuery] decimal fee, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateFee([FromRoute] int Id, [FromQuery][Range (1000,8000,ErrorMessage ="Insert between 1000-8000")] decimal fee, CancellationToken cancellationToken)
         {
             var course = await ctx.Courses.FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
             if (course == null)
             {
                 return NotFound();
             }
+
             course.Fee = fee;
             ctx.Courses.Update(course);
             await ctx.SaveChangesAsync(cancellationToken);
