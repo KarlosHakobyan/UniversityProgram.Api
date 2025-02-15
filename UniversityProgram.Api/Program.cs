@@ -1,7 +1,10 @@
 
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using UniversityProgram.Api.Models;
+using UniversityProgram.Api.Models.Laptop;
 using UniversityProgram.Api.Services;
+using UniversityProgram.Api.Validators.LaptopValidations;
 
 namespace UniversityProgram.Api
 {
@@ -15,6 +18,8 @@ namespace UniversityProgram.Api
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<StudentDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("StudentDb")));
             builder.Services.AddScoped<CourseBankSeviceApi>();
+            builder.Services.AddScoped<IValidator<LaptopAddModel>, LaptopAddModelValidator>();
+            builder.Services.AddValidatorsFromAssemblyContaining<LaptopAddModelValidator>(ServiceLifetime.Transient);
 
             var app = builder.Build();
 
@@ -24,7 +29,7 @@ namespace UniversityProgram.Api
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+              
             app.UseHttpsRedirection();
 
             app.UseAuthorization();

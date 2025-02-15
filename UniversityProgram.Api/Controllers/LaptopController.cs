@@ -6,6 +6,8 @@ using UniversityProgram.Api.Models.Student;
 using UniversityProgram.Api.Models.CPU;
 using UniversityProgram.Api.Models.Library;
 using System.Threading;
+using UniversityProgram.Api.Validators.LaptopValidations;
+using FluentValidation;
 
 namespace UniversityProgram.Api.Controllers
 {
@@ -27,8 +29,13 @@ namespace UniversityProgram.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] LaptopAddModel model, CancellationToken cancellationToken)
+        public async Task<IActionResult> Add([FromBody] LaptopAddModel model,[FromServices] IValidator<LaptopAddModel> validator, CancellationToken cancellationToken)
         {
+            var result = await validator.ValidateAsync(model,cancellationToken);
+            if (!result.IsValid)
+            {
+                return BadRequest(result.Errors);
+            }
             var laptop = new Laptop
             {
                 Name = model.Name,
