@@ -33,25 +33,25 @@ namespace UniversityProgram.Api.Controllers
         }
 
         [HttpPost("/Student/add_with_laptop")]
-        public async Task<IActionResult> AddStudentWithLaptop([FromBody] StudentModel student, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddStudentWithLaptop([FromBody] StudentWithLaptopAddModel student, CancellationToken cancellationToken)
         {
-            var model = new StudentWithLaptopAddModel
+            var studentEntity = new StudentBase
             {
-                Student = new StudentModel
+                Name = student.Name,
+                Email = student.Email,
+                Laptop = student.Laptop == null ? null : new Laptop
                 {
-                    Name = student.Name,
-                    Email = student.Email,
-                    Laptop = student.Laptop == null ? null : new LaptopModel
-                    {
-                        Id = student.Laptop.Id,
-                        Name = student.Laptop.Name
-                    }
+                    Id = student.Laptop.Id,
+                    Name = student.Laptop.Name
                 }
             };
-            /*_ctx.Students.Add(student);
-            await _ctx.SaveChangesAsync(cancellationToken);*/
-            return Ok(model);
+
+            _ctx.Students.Add(studentEntity);
+            await _ctx.SaveChangesAsync(cancellationToken);
+
+            return Ok();
         }
+
 
         #endregion
 

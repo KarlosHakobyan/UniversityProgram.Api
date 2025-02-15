@@ -14,6 +14,7 @@ namespace UniversityProgram.Api
         public DbSet<AddressBase> Address { get; set; } = default!;
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

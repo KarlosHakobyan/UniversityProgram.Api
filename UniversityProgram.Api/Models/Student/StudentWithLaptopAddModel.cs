@@ -1,10 +1,10 @@
-﻿using UniversityProgram.Api.Models.Laptop;
+﻿using UniversityProgram.Api.Entities;
+using UniversityProgram.Api.Models.Laptop;
 
 namespace UniversityProgram.Api.Models.Student
 {
-    public class StudentWithLaptopAddModel
+    public class StudentWithLaptopAddModel : StudentModel
     {     
-        public StudentModel Student{ get; set; } = default!;
-        public LaptopModel Laptop { get; set; } = default!;
+
     }
 }
