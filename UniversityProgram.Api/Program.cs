@@ -6,6 +6,7 @@ using UniversityProgram.Api.Models.Laptop;
 using UniversityProgram.Api.Services;
 using UniversityProgram.Api.Validators.CourseValidations;
 using UniversityProgram.Api.Validators.LaptopValidations;
+using UniversityProgram.Api.Validators.StudentValidations;
 
 namespace UniversityProgram.Api
 {
@@ -23,6 +24,7 @@ namespace UniversityProgram.Api
             builder.Services.AddValidatorsFromAssemblyContaining<LaptopAddModelValidator>(ServiceLifetime.Transient);
             builder.Services.AddValidatorsFromAssemblyContaining<CourseAddModelValidator>(ServiceLifetime.Transient);
             builder.Services.AddValidatorsFromAssemblyContaining<CourseValidator>(ServiceLifetime.Transient);
+            builder.Services.AddValidatorsFromAssemblyContaining<StudentBaseValidator>(ServiceLifetime.Transient);
 
             var app = builder.Build();
 

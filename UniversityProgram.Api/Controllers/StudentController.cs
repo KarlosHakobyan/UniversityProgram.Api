@@ -1,4 +1,6 @@
 ﻿using Azure.Messaging;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
@@ -168,7 +170,8 @@ namespace UniversityProgram.Api.Controllers
         }
 
         [HttpPut("{Id}/addmoney")]
-        public async Task<IActionResult> AddMoney([FromRoute] int Id, [FromQuery][Range (100,10000,ErrorMessage = "Insert value between 100-10000")] decimal money,
+        public async Task<IActionResult> AddMoney([FromRoute] int Id, [FromQuery] decimal money,
+            [FromServices] IValidator<StudentBase> validator,
             CancellationToken cancellationToken)
         {
             var student = await _ctx.Students.FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
@@ -177,11 +180,14 @@ namespace UniversityProgram.Api.Controllers
                 return NotFound();
             }
 
-         //   if (money < 100 || money > 10000)
-           // { return BadRequest("Insert value between 100-10000"); }
-            //Ete Queryi meji Range hanenq petqa es kirarenq vorpes stugum 
+            var result = await validator.ValidateAsync(new StudentBase { Money = money },cancellationToken);
+            if (!result.IsValid)
+            {
+                return BadRequest(result.Errors);
+            }
 
-                student.Money += money;
+
+            student.Money += money;
             await _ctx.SaveChangesAsync(cancellationToken);
             return Ok();
         }
