@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
@@ -36,8 +37,14 @@ namespace UniversityProgram.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody]CourseAddModel model,CancellationToken cancellationToken)
+        public async Task<IActionResult> Add([FromBody]CourseAddModel model,[FromServices] IValidator<CourseAddModel> validator,CancellationToken cancellationToken)
         {
+            var result = await validator.ValidateAsync(model, cancellationToken);
+            if (!result.IsValid)
+            {
+                return BadRequest(result.Errors);
+            }
+
             var course = new Course()
             {
                 Name = model.Name,
@@ -63,7 +70,9 @@ namespace UniversityProgram.Api.Controllers
         }
 
         [HttpPut("{Id}/Fee")]
-        public async Task<IActionResult> UpdateFee([FromRoute] int Id, [FromQuery][Range (1000,8000,ErrorMessage ="Insert between 1000-8000")] decimal fee, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateFee([FromRoute] int Id, [FromQuery] decimal fee,
+            [FromServices] IValidator<Course> validator,
+            CancellationToken cancellationToken)
         {
             var course = await ctx.Courses.FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
             if (course == null)
@@ -71,11 +80,20 @@ namespace UniversityProgram.Api.Controllers
                 return NotFound();
             }
 
+      
+            var validationResult = await validator.ValidateAsync(new Course { Fee = fee }, cancellationToken);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
             course.Fee = fee;
             ctx.Courses.Update(course);
             await ctx.SaveChangesAsync(cancellationToken);
+
             return Ok();
         }
+
 
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete([FromRoute] int Id, CancellationToken cancellationToken)
