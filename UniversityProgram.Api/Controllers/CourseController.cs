@@ -6,6 +6,7 @@ using System.Threading;
 using UniversityProgram.Api.Entities;
 using UniversityProgram.Api.Models.Course;
 using UniversityProgram.Api.Models.CPU;
+using UniversityProgram.Api.Repositories;
 
 namespace UniversityProgram.Api.Controllers
 {
@@ -13,22 +14,23 @@ namespace UniversityProgram.Api.Controllers
     [Route("[controller]")]
     public class CourseController : ControllerBase
     {
-        private readonly StudentDbContext ctx;
+        private readonly ICourseRepository _repository;
 
-        public CourseController(StudentDbContext ctx)
+        public CourseController(ICourseRepository repository)
         {
-            this.ctx= ctx;
+            _repository = repository;
         }
+
         [HttpGet]
-        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAll(CancellationToken token)
         {
-            return Ok(await ctx.Courses.ToListAsync(cancellationToken));
+            return Ok(await _repository.GetCourses(token));
         }
 
         [HttpGet("{Id}")]
-        public async Task<IActionResult> GetById([FromRoute] int Id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetById([FromRoute] int Id,CancellationToken token)
         {
-            var course = await ctx.Courses.FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
+            var course = await _repository.GetCourseByID(Id,token);
             if (course == null)
             {
                 return NotFound();
@@ -50,63 +52,53 @@ namespace UniversityProgram.Api.Controllers
                 Name = model.Name,
                 Fee = model.Fee
             };
-            ctx.Courses.Add(course);
-            await ctx.SaveChangesAsync(cancellationToken);
+            await _repository.AddCourse(course,cancellationToken);
+            
             return Ok();
         }
 
         [HttpPut("{Id}")]
-        public async Task<IActionResult> Update([FromRoute] int Id, [FromBody] CourseUpdateModel model, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateCourseById([FromRoute] int Id, [FromBody] CourseUpdateModel model, CancellationToken cancellationToken)
         {
-            var course = await ctx.Courses.FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
-            if (course == null)
+            bool isUpdated = await _repository.UpdateCourseById(Id, model, cancellationToken);
+            if (!isUpdated)
             {
                 return NotFound();
             }
-            course.Name = model.Name;
-            ctx.Courses.Update(course);
-            await ctx.SaveChangesAsync(cancellationToken);
-            return Ok();
+
+            return Ok("Course updated successfully");
         }
 
         [HttpPut("{Id}/Fee")]
-        public async Task<IActionResult> UpdateFee([FromRoute] int Id, [FromQuery] decimal fee,
+        public async Task<IActionResult> UpdateFee(
+            [FromRoute] int Id,
+            [FromQuery] decimal fee,
             [FromServices] IValidator<Course> validator,
             CancellationToken cancellationToken)
         {
-            var course = await ctx.Courses.FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
-            if (course == null)
+            bool isUpdated = await _repository.UpdateFeeById(Id, fee, validator, cancellationToken);
+
+            if (!isUpdated)
             {
-                return NotFound();
+                return BadRequest("Invalid inserted fee value [from 1000 to 8000] or course not found");
             }
 
-      
-            var validationResult = await validator.ValidateAsync(new Course { Fee = fee }, cancellationToken);
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors);
-            }
-
-            course.Fee = fee;
-            ctx.Courses.Update(course);
-            await ctx.SaveChangesAsync(cancellationToken);
-
-            return Ok();
+            return Ok("Course fee updated successfully");
         }
+
 
 
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete([FromRoute] int Id, CancellationToken cancellationToken)
         {
-            var course = await ctx.Courses.FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
-            if (course == null)
+            bool isDeleted=await _repository.DeleteCourseById(Id,cancellationToken);
+            if (!isDeleted)
             {
-                return NotFound();
+                return BadRequest("Course not found");
             }
-            ctx.Courses.Remove(course);
-            await ctx.SaveChangesAsync(cancellationToken);
-            return Ok();
-        }             
+
+            return Ok("Course deleted");
+        }
 
     }
 }
