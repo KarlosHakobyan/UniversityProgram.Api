@@ -7,6 +7,7 @@ using UniversityProgram.Api.Services;
 using UniversityProgram.Api.Validators.CourseValidations;
 using UniversityProgram.Api.Validators.LaptopValidations;
 using UniversityProgram.Api.Validators.StudentValidations;
+using UniversityProgram.Api.Map;
 
 namespace UniversityProgram.Api
 {
@@ -22,9 +23,9 @@ namespace UniversityProgram.Api
             builder.Services.AddScoped<CourseBankSeviceApi>();
             builder.Services.AddScoped<IValidator<LaptopAddModel>, LaptopAddModelValidator>();
             builder.Services.AddValidatorsFromAssemblyContaining<LaptopAddModelValidator>(ServiceLifetime.Transient);
-            builder.Services.AddValidatorsFromAssemblyContaining<CourseAddModelValidator>(ServiceLifetime.Transient);
             builder.Services.AddValidatorsFromAssemblyContaining<CourseValidator>(ServiceLifetime.Transient);
             builder.Services.AddValidatorsFromAssemblyContaining<StudentBaseValidator>(ServiceLifetime.Transient);
+            builder.Services.AddAutoMapper(typeof(LaptopProfile));
 
             var app = builder.Build();
 

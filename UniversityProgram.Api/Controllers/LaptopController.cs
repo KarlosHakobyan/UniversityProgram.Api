@@ -8,6 +8,7 @@ using UniversityProgram.Api.Models.Library;
 using System.Threading;
 using UniversityProgram.Api.Validators.LaptopValidations;
 using FluentValidation;
+using AutoMapper;
 
 namespace UniversityProgram.Api.Controllers
 {
@@ -16,16 +17,20 @@ namespace UniversityProgram.Api.Controllers
     public class LaptopController : ControllerBase
     {
         private readonly StudentDbContext _ctx;
-        public LaptopController(StudentDbContext ctx)
+        private readonly IMapper _mapper;
+
+        public LaptopController(StudentDbContext ctx, IMapper mapper)
         {
             _ctx = ctx;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
-            var laptops = await _ctx.Laptops.ToListAsync(cancellationToken);
-            return Ok(laptops);
+            List<Laptop> laptops = await _ctx.Laptops.ToListAsync(cancellationToken);
+            List<LaptopModel> models = _mapper.Map<List<LaptopModel>>(laptops);
+            return Ok(models);
         }
 
         [HttpPost]
@@ -36,11 +41,7 @@ namespace UniversityProgram.Api.Controllers
             {
                 return BadRequest(result.Errors);
             }
-            var laptop = new Laptop
-            {
-                Name = model.Name,
-                StudentId = model.StudentId ?? 0
-            };
+            var laptop = _mapper.Map<Laptop>(model);
             _ctx.Laptops.Add(laptop);
             await _ctx.SaveChangesAsync(cancellationToken);
             return Ok();
@@ -65,6 +66,18 @@ namespace UniversityProgram.Api.Controllers
             await _ctx.SaveChangesAsync(cancellationToken);
             return Ok();
         }
+
+        [HttpGet("cpuName")]
+        public async Task<IActionResult> GetLaptopWithCpuName(CancellationToken cancellationToken)
+        {
+            var laptops = await _ctx.Laptops
+                .Include(e => e.Cpu)
+                .ToListAsync();
+            var result = _mapper.Map<List <LaptopWithCpuNameModel >> (laptops);
+            return Ok(result);
+        }
+
+
 
         [HttpGet("{Id}/Cpu")]
         public async Task<IActionResult> GetByIdWithLaptop([FromRoute] int Id, CancellationToken cancellationToken)

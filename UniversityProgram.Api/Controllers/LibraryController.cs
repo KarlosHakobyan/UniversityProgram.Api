@@ -5,6 +5,7 @@ using UniversityProgram.Api.Models.Library;
 using UniversityProgram.Api.Models.UniversityModel;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 
 namespace UniversityProgram.Api.Controllers
 {
@@ -13,9 +14,12 @@ namespace UniversityProgram.Api.Controllers
     public class LibraryController : ControllerBase
     {
         private readonly StudentDbContext _ctx;
-        public LibraryController(StudentDbContext ctx)
+        private readonly IMapper _mapper;
+
+        public LibraryController(StudentDbContext ctx, IMapper mapper)
         {
             _ctx = ctx;
+            _mapper = mapper;
         }
 
         [HttpGet]
