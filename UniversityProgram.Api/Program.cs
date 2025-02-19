@@ -9,6 +9,7 @@ using UniversityProgram.Api.Validators.LaptopValidations;
 using UniversityProgram.Api.Validators.StudentValidations;
 using UniversityProgram.Api.Map;
 using UniversityProgram.Api.Repositories;
+using UniversityProgram.Api.Repositories.CourseRep;
 
 namespace UniversityProgram.Api
 {

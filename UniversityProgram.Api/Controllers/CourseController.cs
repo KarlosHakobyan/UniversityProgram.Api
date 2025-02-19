@@ -7,6 +7,7 @@ using UniversityProgram.Api.Entities;
 using UniversityProgram.Api.Models.Course;
 using UniversityProgram.Api.Models.CPU;
 using UniversityProgram.Api.Repositories;
+using UniversityProgram.Api.Repositories.CourseRep;
 
 namespace UniversityProgram.Api.Controllers
 {

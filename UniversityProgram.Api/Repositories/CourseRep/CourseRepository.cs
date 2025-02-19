@@ -4,11 +4,11 @@ using System.Threading;
 using UniversityProgram.Api.Entities;
 using UniversityProgram.Api.Models.Course;
 
-namespace UniversityProgram.Api.Repositories
+namespace UniversityProgram.Api.Repositories.CourseRep
 {
     public class CourseRepository : ICourseRepository
     {
-        private StudentDbContext _context;
+        private readonly StudentDbContext _context;
 
         public CourseRepository(StudentDbContext context)
         {
@@ -18,7 +18,6 @@ namespace UniversityProgram.Api.Repositories
         public async Task AddCourse(Course course, CancellationToken token = default)
         {
             _context.Courses.Add(course);
-            await _context.SaveChangesAsync(token);
         }
 
         public async Task<IEnumerable<Course>> GetCourses(CancellationToken token = default)
@@ -39,7 +38,6 @@ namespace UniversityProgram.Api.Repositories
                 return false;
             }
             course.Name = model.Name;
-            await _context.SaveChangesAsync(token);
             return true;
         }
 
@@ -50,29 +48,37 @@ namespace UniversityProgram.Api.Repositories
             {
                 return false;
             }
-
             course.Fee = fee;
+
             var validationResult = await validator.ValidateAsync(course, token);
 
             if (!validationResult.IsValid)
             {
                 return false;
-            }
-
-            await _context.SaveChangesAsync(token);
+            }            
             return true;
         }
 
 
         public async Task<bool> DeleteCourseById(int Id, CancellationToken token = default)
-        {   var course = await _context.Courses.FirstOrDefaultAsync(e => e.Id == Id, token);
+        {
+            var course = await _context.Courses.FirstOrDefaultAsync(e => e.Id == Id, token);
             if (course == null)
             {
                 return false;
             }
-            _context.Courses.Remove(course);
-            await _context.SaveChangesAsync(token);
+            _context.Courses.Remove(course);            
             return true;
-        }       
+        }
+
+        public void DeleteCourse(Course course, CancellationToken token = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateCourse(Course course, CancellationToken token = default)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
