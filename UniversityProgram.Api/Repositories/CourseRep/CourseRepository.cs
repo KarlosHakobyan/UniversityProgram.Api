@@ -30,55 +30,24 @@ namespace UniversityProgram.Api.Repositories.CourseRep
             return await _context.Courses.FirstOrDefaultAsync(e => e.Id == Id, token);
         }
 
-        public async Task<bool> UpdateCourseById(int Id, CourseUpdateModel model, CancellationToken token = default)
+        public async Task UpdateCourse(Course course, CancellationToken token = default)
+        {
+            _context.Courses.Update(course);
+            await _context.SaveChangesAsync(token);
+        }
+
+        public async Task DeleteCourseById(int Id, CancellationToken token = default)
         {
             var course = await _context.Courses.FirstOrDefaultAsync(e => e.Id == Id, token);
-            if (course == null)
-            {
-                return false;
-            }
-            course.Name = model.Name;
-            return true;
+      
+            _context.Courses.Remove(course);
+            await _context.SaveChangesAsync(token);
         }
 
-        public async Task<bool> UpdateFeeById(int Id, decimal fee, IValidator<Course> validator, CancellationToken token = default)
+        public async Task DeleteCourse(Course course, CancellationToken token = default)
         {
-            var course = await _context.Courses.FirstOrDefaultAsync(e => e.Id == Id, token);
-            if (course == null)
-            {
-                return false;
-            }
-            course.Fee = fee;
-
-            var validationResult = await validator.ValidateAsync(course, token);
-
-            if (!validationResult.IsValid)
-            {
-                return false;
-            }            
-            return true;
-        }
-
-
-        public async Task<bool> DeleteCourseById(int Id, CancellationToken token = default)
-        {
-            var course = await _context.Courses.FirstOrDefaultAsync(e => e.Id == Id, token);
-            if (course == null)
-            {
-                return false;
-            }
-            _context.Courses.Remove(course);            
-            return true;
-        }
-
-        public void DeleteCourse(Course course, CancellationToken token = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateCourse(Course course, CancellationToken token = default)
-        {
-            throw new NotImplementedException();
+            _context.Courses.Remove(course);
+            await _context.SaveChangesAsync(token);
         }
     }
 }

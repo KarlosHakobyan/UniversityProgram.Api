@@ -29,9 +29,9 @@ namespace UniversityProgram.Api.Controllers
         }
 
         [HttpGet("{Id}")]
-        public async Task<IActionResult> GetById([FromRoute] int Id,CancellationToken token)
+        public async Task<IActionResult> GetById([FromRoute] int Id, CancellationToken token)
         {
-            var course = await _repository.GetCourseByID(Id,token);
+            var course = await _repository.GetCourseByID(Id, token);
             if (course == null)
             {
                 return NotFound();
@@ -40,7 +40,7 @@ namespace UniversityProgram.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody]CourseAddModel model,[FromServices] IValidator<CourseAddModel> validator,CancellationToken cancellationToken)
+        public async Task<IActionResult> Add([FromBody] CourseAddModel model, [FromServices] IValidator<CourseAddModel> validator, CancellationToken cancellationToken)
         {
             var result = await validator.ValidateAsync(model, cancellationToken);
             if (!result.IsValid)
@@ -53,52 +53,61 @@ namespace UniversityProgram.Api.Controllers
                 Name = model.Name,
                 Fee = model.Fee
             };
-            await _repository.AddCourse(course,cancellationToken);
-            
+            await _repository.AddCourse(course, cancellationToken);
+
             return Ok();
         }
 
         [HttpPut("{Id}")]
         public async Task<IActionResult> UpdateCourseById([FromRoute] int Id, [FromBody] CourseUpdateModel model, CancellationToken cancellationToken)
         {
-            bool isUpdated = await _repository.UpdateCourseById(Id, model, cancellationToken);
-            if (!isUpdated)
+            var course = await _repository.GetCourseByID(Id, cancellationToken);
+            if (course == null)
             {
                 return NotFound();
             }
 
-            return Ok("Course updated successfully");
+            course.Name = model.Name;
+            await _repository.UpdateCourse(course, cancellationToken);
+            return Ok();
         }
+
 
         [HttpPut("{Id}/Fee")]
         public async Task<IActionResult> UpdateFee(
-            [FromRoute] int Id,
-            [FromQuery] decimal fee,
-            [FromServices] IValidator<Course> validator,
-            CancellationToken cancellationToken)
+        [FromRoute] int Id,
+        [FromQuery] decimal fee,
+        [FromServices] IValidator<Course> validator,
+        CancellationToken cancellationToken)
         {
-            bool isUpdated = await _repository.UpdateFeeById(Id, fee, validator, cancellationToken);
-
-            if (!isUpdated)
+            var course = await _repository.GetCourseByID(Id, cancellationToken);
+            if (course == null)
             {
-                return BadRequest("Invalid inserted fee value [from 1000 to 8000] or course not found");
+                return NotFound();
             }
 
-            return Ok("Course fee updated successfully");
+            var validationResult = await validator.ValidateAsync(new Course { Fee = fee }, cancellationToken);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
+            course.Fee = fee;
+
+            await _repository.UpdateCourse(course, cancellationToken);
+            return Ok();
         }
-
-
 
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete([FromRoute] int Id, CancellationToken cancellationToken)
         {
-            bool isDeleted=await _repository.DeleteCourseById(Id,cancellationToken);
-            if (!isDeleted)
+            var course = await _repository.GetCourseByID(Id, cancellationToken);
+            if (course == null)
             {
-                return BadRequest("Course not found");
+                return NotFound();
             }
-
-            return Ok("Course deleted");
+            await _repository.DeleteCourse(course);
+            return Ok();
         }
 
     }
