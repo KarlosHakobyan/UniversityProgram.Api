@@ -8,7 +8,6 @@ namespace UniversityProgram.Api.Repositories.CourseRep
     {
         Task AddCourse(Course course, CancellationToken token = default);
         Task DeleteCourse(Course course, CancellationToken token = default);
-        Task DeleteCourseById(int id, CancellationToken cancellationToken);
         Task<Course?> GetCourseByID(int Id, CancellationToken token = default);
         Task<IEnumerable<Course>> GetCourses(CancellationToken token = default);
         Task UpdateCourse(Course course, CancellationToken token = default);                

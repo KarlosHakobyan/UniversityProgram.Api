@@ -18,6 +18,7 @@ namespace UniversityProgram.Api.Repositories.CourseRep
         public async Task AddCourse(Course course, CancellationToken token = default)
         {
             _context.Courses.Add(course);
+            await _context.SaveChangesAsync(token);
         }
 
         public async Task<IEnumerable<Course>> GetCourses(CancellationToken token = default)

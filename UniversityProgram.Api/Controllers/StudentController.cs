@@ -13,6 +13,8 @@ using UniversityProgram.Api.Models.Course;
 using UniversityProgram.Api.Models.CPU;
 using UniversityProgram.Api.Models.Laptop;
 using UniversityProgram.Api.Models.Student;
+using UniversityProgram.Api.Repositories.CourseRep;
+using UniversityProgram.Api.Repositories.StudentRep;
 using UniversityProgram.Api.Services;
 
 namespace UniversityProgram.Api.Controllers
@@ -21,10 +23,11 @@ namespace UniversityProgram.Api.Controllers
     [Route("[controller]")]
     public class StudentController : ControllerBase
     {
-        private readonly StudentDbContext _ctx;
-        public StudentController(StudentDbContext ctx)
+        private readonly IStudentRepository _studentRepository;
+
+        public StudentController(IStudentRepository studentRepository)
         {
-            _ctx = ctx;
+            _studentRepository = studentRepository;
         }
 
         #region HTTPPOST`s
@@ -32,8 +35,7 @@ namespace UniversityProgram.Api.Controllers
         public async Task<IActionResult> Add([FromBody] StudentAddModel model, CancellationToken cancellationToken)
         {
             var student = model.Map();
-            _ctx.Students.Add(student);
-            await _ctx.SaveChangesAsync(cancellationToken);
+            await _studentRepository.AddStudent(student,cancellationToken);            
             return Ok();
         }
 
@@ -51,10 +53,8 @@ namespace UniversityProgram.Api.Controllers
                 }
             };
 
-            _ctx.Students.Add(studentEntity);
-            await _ctx.SaveChangesAsync(cancellationToken);
-
-            return Ok();
+            _studentRepository.AddStudent(studentEntity,cancellationToken);
+             return Ok();
         }
 
 
@@ -64,14 +64,14 @@ namespace UniversityProgram.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
-            var students = await _ctx.Students.ToListAsync(cancellationToken);
+            var students = await _studentRepository.GetStudents(cancellationToken);
             return Ok(students.Select(e => e.Map()));
         }
 
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetById([FromRoute] int Id, CancellationToken cancellationToken)
         {
-            var student = await _ctx.Students.FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
+            var student = await _studentRepository.GetStudentByID(Id,cancellationToken);
             if (student == null)
             {
                 return NotFound();
@@ -80,7 +80,7 @@ namespace UniversityProgram.Api.Controllers
             return Ok(student.Map());
         }
 
-        [HttpGet("{Id}/Laptop")]
+/*        [HttpGet("{Id}/Laptop")]
         public async Task<IActionResult> GetByIdWithLaptop([FromRoute] int Id, CancellationToken cancellationToken)
         {
             var student = await _ctx.Students.Include(e => e.Laptop)
@@ -136,10 +136,10 @@ namespace UniversityProgram.Api.Controllers
             }).ToList();
 
             return Ok(studentModels);
-        }
+        }*/
 
 
-        [HttpGet("{Id}/with_laptop")]
+       /* [HttpGet("{Id}/with_laptop")]
         public async Task<IActionResult> GetById_StudentWithLaptop([FromRoute] int Id, CancellationToken cancellationToken)
         {
             var student = await _ctx.Students.Include(e => e.Laptop)
@@ -150,7 +150,7 @@ namespace UniversityProgram.Api.Controllers
             }
 
             return Ok(student.MapToStudentWithLaptop());
-        }
+        }*/
         #endregion
 
         #region HTTPPUT`s
@@ -158,14 +158,13 @@ namespace UniversityProgram.Api.Controllers
         [HttpPut("{Id}")]
         public async Task<IActionResult> Update([FromRoute] int Id, [FromBody] StudentUpdateModel model, CancellationToken cancellationToken)
         {
-            var student = await _ctx.Students.FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
+            var student = await _studentRepository.GetStudentByID(Id,cancellationToken);
             if (student == null)
             {
                 return NotFound();
             }
             student.Email = model.Email;
-            _ctx.Students.Update(student);
-            await _ctx.SaveChangesAsync(cancellationToken);
+            await _studentRepository.UpdateStudent(student,cancellationToken);            
             return Ok();
         }
 
@@ -174,7 +173,7 @@ namespace UniversityProgram.Api.Controllers
             [FromServices] IValidator<StudentBase> validator,
             CancellationToken cancellationToken)
         {
-            var student = await _ctx.Students.FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
+            var student = await _studentRepository.GetStudentByID(Id,cancellationToken);
             if (student == null)
             {
                 return NotFound();
@@ -188,11 +187,11 @@ namespace UniversityProgram.Api.Controllers
 
 
             student.Money += money;
-            await _ctx.SaveChangesAsync(cancellationToken);
+            await _studentRepository.UpdateStudent(student,cancellationToken);
             return Ok();
         }
 
-        [HttpPut("{Id}/pay/{courseId}")]
+        /*[HttpPut("{Id}/pay/{courseId}")]
         public async Task<IActionResult> PayForCourse([FromRoute] int Id, [FromRoute] int courseId,
             [FromServices] CourseBankSeviceApi bankApi, CancellationToken cancellationToken)
         {
@@ -231,8 +230,8 @@ namespace UniversityProgram.Api.Controllers
                 return BadRequest(e.Message);
             }
             return Ok();
-        }
-
+        }*/
+/*
         [HttpPut("{Id}/course")]
         public async Task<IActionResult> AddCourse([FromRoute] int Id, [FromQuery] int courseId, CancellationToken cancellationToken)
         {
@@ -257,9 +256,9 @@ namespace UniversityProgram.Api.Controllers
             student.CourseStudents.Add(courseStudent);
             await _ctx.SaveChangesAsync(cancellationToken);
             return Ok();
-        }
+        }*/
 
-        [HttpPut("{Id}/update_swl")]
+        /*[HttpPut("{Id}/update_swl")]
         public async Task<IActionResult> UpdateById_StudentWithLaptop([FromRoute] int Id, [FromBody] StudentWithLaptopUpdateModel studentModel, CancellationToken cancellationToken)
         {
             var student = await _ctx.Students
@@ -279,7 +278,7 @@ namespace UniversityProgram.Api.Controllers
             await _ctx.SaveChangesAsync(cancellationToken);
 
             return Ok(studentModel);
-        }
+        }*/
 
         #endregion
 
@@ -288,17 +287,16 @@ namespace UniversityProgram.Api.Controllers
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete([FromRoute] int Id, CancellationToken cancellationToken)
         {
-            var student = await _ctx.Students.FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
+            var student = await _studentRepository.GetStudentByID(Id,cancellationToken);
             if (student == null)
             {
                 return NotFound();
             }
-            _ctx.Students.Remove(student);
-            await _ctx.SaveChangesAsync(cancellationToken);
+            await _studentRepository.DeleteStudent(student,cancellationToken);            
             return Ok();
         }
             
-        [HttpDelete("{Id}/with_laptop")]
+       /* [HttpDelete("{Id}/with_laptop")]
         public async Task<IActionResult> Delete_StudentWithLaptop([FromRoute] int Id, CancellationToken cancellationToken)
         {
             var student = await _ctx.Students.Include(e=>e.Laptop).FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
@@ -309,7 +307,7 @@ namespace UniversityProgram.Api.Controllers
             _ctx.Students.Remove(student);
             await _ctx.SaveChangesAsync(cancellationToken);
             return Ok();
-        }
+        }*/
         #endregion
 
 

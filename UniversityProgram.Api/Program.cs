@@ -10,6 +10,7 @@ using UniversityProgram.Api.Validators.StudentValidations;
 using UniversityProgram.Api.Map;
 using UniversityProgram.Api.Repositories;
 using UniversityProgram.Api.Repositories.CourseRep;
+using UniversityProgram.Api.Repositories.StudentRep;
 
 namespace UniversityProgram.Api
 {
@@ -29,7 +30,7 @@ namespace UniversityProgram.Api
             builder.Services.AddValidatorsFromAssemblyContaining<StudentBaseValidator>(ServiceLifetime.Transient);
             builder.Services.AddAutoMapper(typeof(LaptopProfile));
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
-
+            builder.Services.AddScoped<IStudentRepository, StudentRepository>();
             var app = builder.Build();
 
             

@@ -106,7 +106,7 @@ namespace UniversityProgram.Api.Controllers
             {
                 return NotFound();
             }
-            await _repository.DeleteCourse(course);
+            await _repository.DeleteCourse(course,cancellationToken);
             return Ok();
         }
 
