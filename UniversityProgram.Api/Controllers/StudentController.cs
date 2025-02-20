@@ -82,12 +82,10 @@ namespace UniversityProgram.Api.Controllers
             return Ok(student.Map());
         }
 
-/*        [HttpGet("{Id}/Laptop")]
+        [HttpGet("{Id}/Laptop")]
         public async Task<IActionResult> GetByIdWithLaptop([FromRoute] int Id, CancellationToken cancellationToken)
         {
-            var student = await _ctx.Students.Include(e => e.Laptop)
-                .ThenInclude(e => e.Cpu)
-                .FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
+            var student = await _studentRepository.GetByIdWithLaptop(Id, cancellationToken);
             if (student == null)
             {
                 return NotFound();
@@ -99,10 +97,7 @@ namespace UniversityProgram.Api.Controllers
         [HttpGet("{Id}/course")]
         public async Task<IActionResult> GetWithCourses([FromRoute] int Id, CancellationToken cancellationToken)
         {
-            var student = await _ctx.Students
-                .Include(e => e.CourseStudents)
-                .ThenInclude(e => e.Course)
-                .FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
+            var student = await _studentRepository.GetByIdWithCourses(Id, cancellationToken);
             if (student == null)
             {
                 return NotFound();
@@ -111,7 +106,7 @@ namespace UniversityProgram.Api.Controllers
             return Ok(student.MapStudentWithCourseModel());
         }
 
-        [HttpGet("with_laptop")]
+      /*  [HttpGet("with_laptop")]
         public async Task<IActionResult> GetAllStudentWithLaptop(CancellationToken cancellationToken)
         {
             var students = await _ctx.Students
@@ -141,18 +136,18 @@ namespace UniversityProgram.Api.Controllers
         }*/
 
 
-       /* [HttpGet("{Id}/with_laptop")]
-        public async Task<IActionResult> GetById_StudentWithLaptop([FromRoute] int Id, CancellationToken cancellationToken)
-        {
-            var student = await _ctx.Students.Include(e => e.Laptop)
-                .FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
-            if (student == null)
-            {
-                return NotFound();
-            }
+        /* [HttpGet("{Id}/with_laptop")]
+         public async Task<IActionResult> GetById_StudentWithLaptop([FromRoute] int Id, CancellationToken cancellationToken)
+         {
+             var student = await _ctx.Students.Include(e => e.Laptop)
+                 .FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
+             if (student == null)
+             {
+                 return NotFound();
+             }
 
-            return Ok(student.MapToStudentWithLaptop());
-        }*/
+             return Ok(student.MapToStudentWithLaptop());
+         }*/
         #endregion
 
         #region HTTPPUT`s
