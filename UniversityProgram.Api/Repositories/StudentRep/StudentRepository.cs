@@ -15,6 +15,7 @@ namespace UniversityProgram.Api.Repositories.StudentRep
         public async Task AddStudent(StudentBase student, CancellationToken token = default)
         {
             _ctx.Students.Add(student);
+            await _ctx.SaveChangesAsync(token);
 
         }
 

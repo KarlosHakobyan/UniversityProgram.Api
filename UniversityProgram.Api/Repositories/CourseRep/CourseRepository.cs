@@ -37,14 +37,6 @@ namespace UniversityProgram.Api.Repositories.CourseRep
             await _context.SaveChangesAsync(token);
         }
 
-        public async Task DeleteCourseById(int Id, CancellationToken token = default)
-        {
-            var course = await _context.Courses.FirstOrDefaultAsync(e => e.Id == Id, token);
-      
-            _context.Courses.Remove(course);
-            await _context.SaveChangesAsync(token);
-        }
-
         public async Task DeleteCourse(Course course, CancellationToken token = default)
         {
             _context.Courses.Remove(course);

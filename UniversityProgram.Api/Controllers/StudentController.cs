@@ -53,7 +53,7 @@ namespace UniversityProgram.Api.Controllers
                 }
             };
 
-            _studentRepository.AddStudent(studentEntity,cancellationToken);
+            await _studentRepository.AddStudent(studentEntity,cancellationToken);
              return Ok();
         }
 
