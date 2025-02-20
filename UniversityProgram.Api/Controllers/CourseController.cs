@@ -15,23 +15,23 @@ namespace UniversityProgram.Api.Controllers
     [Route("[controller]")]
     public class CourseController : ControllerBase
     {
-        private readonly ICourseRepository _repository;
+        private readonly IUnitOfWork _uow;
 
-        public CourseController(ICourseRepository repository)
+        public CourseController(IUnitOfWork uow)
         {
-            _repository = repository;
+            _uow = uow;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken token)
         {
-            return Ok(await _repository.GetCourses(token));
+            return Ok(await _uow.CourseRepository.GetCourses(token));
         }
 
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetById([FromRoute] int Id, CancellationToken token)
         {
-            var course = await _repository.GetCourseByID(Id, token);
+            var course = await _uow.CourseRepository.GetCourseByID(Id, token);
             if (course == null)
             {
                 return NotFound();
@@ -53,22 +53,23 @@ namespace UniversityProgram.Api.Controllers
                 Name = model.Name,
                 Fee = model.Fee
             };
-            await _repository.AddCourse(course, cancellationToken);
-
+            _uow.CourseRepository.AddCourse(course, cancellationToken);
+            await _uow.Save(cancellationToken);
             return Ok();
         }
 
         [HttpPut("{Id}")]
         public async Task<IActionResult> UpdateCourseById([FromRoute] int Id, [FromBody] CourseUpdateModel model, CancellationToken cancellationToken)
         {
-            var course = await _repository.GetCourseByID(Id, cancellationToken);
+            var course = await _uow.CourseRepository.GetCourseByID(Id, cancellationToken);
             if (course == null)
             {
                 return NotFound();
             }
 
             course.Name = model.Name;
-            await _repository.UpdateCourse(course, cancellationToken);
+            _uow.CourseRepository.UpdateCourse(course, cancellationToken);
+            await _uow.Save(cancellationToken);
             return Ok();
         }
 
@@ -80,7 +81,7 @@ namespace UniversityProgram.Api.Controllers
         [FromServices] IValidator<Course> validator,
         CancellationToken cancellationToken)
         {
-            var course = await _repository.GetCourseByID(Id, cancellationToken);
+            var course = await _uow.CourseRepository.GetCourseByID(Id, cancellationToken);
             if (course == null)
             {
                 return NotFound();
@@ -94,19 +95,21 @@ namespace UniversityProgram.Api.Controllers
 
             course.Fee = fee;
 
-            await _repository.UpdateCourse(course, cancellationToken);
+            _uow.CourseRepository.UpdateCourse(course, cancellationToken);
+            await _uow.Save(cancellationToken);
             return Ok();
         }
 
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete([FromRoute] int Id, CancellationToken cancellationToken)
         {
-            var course = await _repository.GetCourseByID(Id, cancellationToken);
+            var course = await _uow.CourseRepository.GetCourseByID(Id, cancellationToken);
             if (course == null)
             {
                 return NotFound();
             }
-            await _repository.DeleteCourse(course,cancellationToken);
+            _uow.CourseRepository.DeleteCourse(course,cancellationToken);
+            await _uow.Save(cancellationToken);
             return Ok();
         }
 

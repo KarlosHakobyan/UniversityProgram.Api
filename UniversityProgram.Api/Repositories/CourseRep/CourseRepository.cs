@@ -15,10 +15,9 @@ namespace UniversityProgram.Api.Repositories.CourseRep
             _context = context;
         }
 
-        public async Task AddCourse(Course course, CancellationToken token = default)
+        public void AddCourse(Course course, CancellationToken token = default)
         {
-            _context.Courses.Add(course);
-            await _context.SaveChangesAsync(token);
+            _context.Courses.Add(course);          
         }
 
         public async Task<IEnumerable<Course>> GetCourses(CancellationToken token = default)
@@ -31,16 +30,14 @@ namespace UniversityProgram.Api.Repositories.CourseRep
             return await _context.Courses.FirstOrDefaultAsync(e => e.Id == Id, token);
         }
 
-        public async Task UpdateCourse(Course course, CancellationToken token = default)
+        public void UpdateCourse(Course course, CancellationToken token = default)
         {
-            _context.Courses.Update(course);
-            await _context.SaveChangesAsync(token);
+            _context.Courses.Update(course);            
         }
 
-        public async Task DeleteCourse(Course course, CancellationToken token = default)
+        public void DeleteCourse(Course course, CancellationToken token = default)
         {
-            _context.Courses.Remove(course);
-            await _context.SaveChangesAsync(token);
+            _context.Courses.Remove(course);           
         }
     }
 }

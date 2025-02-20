@@ -13,11 +13,9 @@ namespace UniversityProgram.Api.Repositories.StudentRep
             _ctx = ctx;
         }
 
-        public async Task AddStudent(StudentBase student, CancellationToken token = default)
+        public void AddStudent(StudentBase student, CancellationToken token = default)
         {
             _ctx.Students.Add(student);
-            await _ctx.SaveChangesAsync(token);
-
         }
 
         public async Task<IEnumerable<StudentBase>> GetStudents(CancellationToken token = default)
@@ -30,16 +28,14 @@ namespace UniversityProgram.Api.Repositories.StudentRep
             return await _ctx.Students.FirstOrDefaultAsync(e => e.Id == Id, token);
         }
 
-        public async Task UpdateStudent(StudentBase student, CancellationToken token = default)
+        public void UpdateStudent(StudentBase student)
         {
             _ctx.Students.Update(student);
-            await _ctx.SaveChangesAsync(token);
         }
 
-        public async Task DeleteStudent(StudentBase student, CancellationToken token = default)
+        public void DeleteStudent(StudentBase student, CancellationToken token = default)
         {
-            _ctx.Students.Remove(student);
-            await _ctx.SaveChangesAsync(token);
+            _ctx.Students.Remove(student);          
         }
 
         public async Task<StudentBase?> GetByIdWithLaptop(int Id, CancellationToken token = default)

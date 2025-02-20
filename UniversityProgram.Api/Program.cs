@@ -29,9 +29,14 @@ namespace UniversityProgram.Api
             builder.Services.AddValidatorsFromAssemblyContaining<CourseValidator>(ServiceLifetime.Transient);
             builder.Services.AddValidatorsFromAssemblyContaining<StudentBaseValidator>(ServiceLifetime.Transient);
             builder.Services.AddAutoMapper(typeof(LaptopProfile));
-            builder.Services.AddScoped<ICourseRepository, CourseRepository>();
-            builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-            builder.Services.AddScoped<ICourseStudentRepository, CourseStudentRepository>();
+            /*      builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+                    builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+                    builder.Services.AddScoped<ICourseStudentRepository, CourseStudentRepository>();
+
+                    UnitOfWork kirarelu depqum es repositorynery jnjvum en */
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             var app = builder.Build();
 
             

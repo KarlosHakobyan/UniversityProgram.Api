@@ -20,11 +20,9 @@ namespace UniversityProgram.Api.Repositories.CourseRep
 
         }
 
-        public async Task UpdateCourseStudent (CourseStudent courseStudent, CancellationToken token = default!)
+        public void UpdateCourseStudent (CourseStudent courseStudent)
         {
             _ctx.CourseStudent.Update(courseStudent);
-            await _ctx.SaveChangesAsync(token);
-
         }
 
     }
