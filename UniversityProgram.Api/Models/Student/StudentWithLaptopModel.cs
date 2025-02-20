@@ -4,7 +4,7 @@ using UniversityProgram.Api.Models.Laptop;
 
 namespace UniversityProgram.Api.Models.Student
 {
-    public class StudentWithLaptopModel : StudentBase
+    public class StudentWithLaptopModel
     {
         public int Id { get; set; }
         [MinLength(2, ErrorMessage = "Name must be at least 2 characters long")]

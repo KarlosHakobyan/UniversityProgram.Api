@@ -46,6 +46,21 @@ namespace UniversityProgram.Api.Repositories.StudentRep
                         .FirstOrDefaultAsync(e => e.Id == Id,token);
         }
 
+        public async Task<List<StudentBase>> GetAllStudentWithLaptop(CancellationToken token = default)
+        {
+            return await _ctx.Students
+                .Include(e => e.Laptop)
+                .ToListAsync(token);
+        }
+
+        public async Task<StudentBase?> GetById_StudentWithLaptop(int Id, CancellationToken token = default)
+        {
+            return await _ctx.Students
+                .Include(e => e.Laptop)
+                    .FirstOrDefaultAsync(e => e.Id == Id, token);
+        }
+
+
         public async Task<StudentBase?> GetByIdWithCourses(int Id, CancellationToken token = default)
         {
             return await _ctx.Students                
