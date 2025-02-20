@@ -11,6 +11,7 @@ using UniversityProgram.Api.Map;
 using UniversityProgram.Api.Repositories;
 using UniversityProgram.Api.Repositories.CourseRep;
 using UniversityProgram.Api.Repositories.StudentRep;
+using UniversityProgram.Api.Services.StudentServices;
 
 namespace UniversityProgram.Api
 {
@@ -22,8 +23,7 @@ namespace UniversityProgram.Api
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddDbContext<StudentDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("StudentDb")));
-            builder.Services.AddScoped<CourseBankSeviceApi>();
+            builder.Services.AddDbContext<StudentDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("StudentDb")));           
             builder.Services.AddScoped<IValidator<LaptopAddModel>, LaptopAddModelValidator>();
             builder.Services.AddValidatorsFromAssemblyContaining<LaptopAddModelValidator>(ServiceLifetime.Transient);
             builder.Services.AddValidatorsFromAssemblyContaining<CourseValidator>(ServiceLifetime.Transient);
@@ -36,6 +36,7 @@ namespace UniversityProgram.Api
                     UnitOfWork kirarelu depqum es repositorynery jnjvum en */
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IStudentService, StudentService>();
 
             var app = builder.Build();
 
