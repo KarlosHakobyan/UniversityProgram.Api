@@ -25,11 +25,13 @@ namespace UniversityProgram.Api.Controllers
     {
         private readonly IStudentRepository _studentRepository;
         private readonly ICourseRepository _courseRepository;
+        private readonly ICourseStudentRepository _courseStudentRepository;
 
-        public StudentController(IStudentRepository studentRepository,ICourseRepository courseRepository)
+        public StudentController(IStudentRepository studentRepository,ICourseRepository courseRepository,ICourseStudentRepository courseStudentRepository)
         {
             _studentRepository = studentRepository;
             _courseRepository = courseRepository;
+            _courseStudentRepository = courseStudentRepository;
         }
 
         #region HTTPPOST`s
@@ -188,24 +190,19 @@ namespace UniversityProgram.Api.Controllers
             return Ok();
         }
 
-        /*[HttpPut("{Id}/pay/{courseId}")]
-        public async Task<IActionResult> PayForCourse([FromRoute] int Id, [FromRoute] int courseId,
-            [FromServices] CourseBankSeviceApi bankApi, CancellationToken cancellationToken)
+          ///***************************************************************************
+
+        [HttpPut("{Id}/pay/{courseId}")]
+        public async Task<IActionResult> PayForCourse([FromRoute] int Id, [FromRoute] int courseId,CancellationToken cancellationToken)
         {
-            using var transaction = await _ctx.Database.BeginTransactionAsync(cancellationToken);
-            try
-            {
-                var student = await _ctx.Students
-                    .Include(e => e.CourseStudents)
-                    .ThenInclude(e => e.Course)
-                    .FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
+                var student = await _studentRepository.GetStudentByID(Id,cancellationToken);
 
                 if (student == null)
                 {
                     return NotFound();
                 }
 
-                var courseStudent = student.CourseStudents.FirstOrDefault(e => e.CourseId == courseId);
+                var courseStudent = await _courseStudentRepository.GetByIds(Id, courseId, cancellationToken);
                 if (courseStudent == null)
                 {
                     return NotFound();
@@ -216,18 +213,13 @@ namespace UniversityProgram.Api.Controllers
                     return BadRequest("Not enough money");
                 }
                 else student.Money -= courseStudent.Course.Fee;
-
+                _studentRepository.UpdateStudent(student);
                 courseStudent.Paid = true;
-                await _ctx.SaveChangesAsync(cancellationToken);
-                await transaction.CommitAsync(cancellationToken);
-            }
-            catch (Exception e)
-            {
-                await transaction.RollbackAsync(cancellationToken);
-                return BadRequest(e.Message);
-            }
-            return Ok();
-        }*/
+            await _courseStudentRepository.UpdateCourseStudent(courseStudent);
+                return Ok();
+        }
+
+        ///***************************************************************************
 
         [HttpPut("{Id}/course")]
         public async Task<IActionResult> AddCourse([FromRoute] int Id, [FromQuery] int courseId, CancellationToken cancellationToken)

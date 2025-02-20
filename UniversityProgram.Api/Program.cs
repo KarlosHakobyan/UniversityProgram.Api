@@ -31,6 +31,7 @@ namespace UniversityProgram.Api
             builder.Services.AddAutoMapper(typeof(LaptopProfile));
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
             builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+            builder.Services.AddScoped<ICourseStudentRepository, CourseStudentRepository>();
             var app = builder.Build();
 
             

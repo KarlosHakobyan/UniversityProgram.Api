@@ -13,7 +13,7 @@ namespace UniversityProgram.Api
         public DbSet<Course> Courses{ get; set; } = default!;
         public DbSet<AddressBase> Address { get; set; } = default!;
 
-
+        public DbSet<CourseStudent> CourseStudent { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
