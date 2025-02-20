@@ -24,10 +24,12 @@ namespace UniversityProgram.Api.Controllers
     public class StudentController : ControllerBase
     {
         private readonly IStudentRepository _studentRepository;
+        private readonly ICourseRepository _courseRepository;
 
-        public StudentController(IStudentRepository studentRepository)
+        public StudentController(IStudentRepository studentRepository,ICourseRepository courseRepository)
         {
             _studentRepository = studentRepository;
+            _courseRepository = courseRepository;
         }
 
         #region HTTPPOST`s
@@ -163,7 +165,7 @@ namespace UniversityProgram.Api.Controllers
             {
                 return NotFound();
             }
-            student.Email = model.Email;
+            student.Email = model.Email is not null ? model.Email : student.Email;
             await _studentRepository.UpdateStudent(student,cancellationToken);            
             return Ok();
         }
@@ -231,17 +233,17 @@ namespace UniversityProgram.Api.Controllers
             }
             return Ok();
         }*/
-/*
+
         [HttpPut("{Id}/course")]
         public async Task<IActionResult> AddCourse([FromRoute] int Id, [FromQuery] int courseId, CancellationToken cancellationToken)
         {
-            var student = await _ctx.Students.FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
+            var student = await _studentRepository.GetStudentByID(Id,cancellationToken);
             if (student == null)
             {
                 return NotFound();
             }
 
-            var course = await _ctx.Courses.FirstOrDefaultAsync(e => e.Id == courseId, cancellationToken);
+            var course = await _courseRepository.GetCourseByID(courseId,cancellationToken);
             if (course == null)
             {
                 return NotFound();
@@ -254,9 +256,9 @@ namespace UniversityProgram.Api.Controllers
             };
 
             student.CourseStudents.Add(courseStudent);
-            await _ctx.SaveChangesAsync(cancellationToken);
+            await _studentRepository.UpdateStudent(student,cancellationToken);
             return Ok();
-        }*/
+        }
 
         /*[HttpPut("{Id}/update_swl")]
         public async Task<IActionResult> UpdateById_StudentWithLaptop([FromRoute] int Id, [FromBody] StudentWithLaptopUpdateModel studentModel, CancellationToken cancellationToken)
