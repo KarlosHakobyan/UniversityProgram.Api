@@ -5,20 +5,25 @@
 namespace UniversityProgram.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class Add_Address : Migration
+    public partial class Add_address_column : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                 name: "Address");
+            migrationBuilder.AddColumn<string>(
+            name: "Address",
+            table: "Students",
+            type: "nvarchar(max)",
+            nullable: false,
+            defaultValue: "");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Address");
+            migrationBuilder.DropColumn(
+                name: "Address",
+                table: "Students");            
         }
     }
 }

@@ -11,8 +11,7 @@ namespace UniversityProgram.Data
         public DbSet<Library> Libraries { get; set; } = default!;
         public DbSet<University> Universities { get; set; } = default!;
         public DbSet<Course> Courses { get; set; } = default!;
-        public DbSet<AddressBase> Address { get; set; } = default!;
-
+      
         public DbSet<CourseStudent> CourseStudent { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -82,17 +81,7 @@ namespace UniversityProgram.Data
             modelBuilder.Entity<Course>().HasMany(e => e.CourseStudents).WithOne(e => e.Course)
             .HasForeignKey(e => e.CourseId);
             modelBuilder.Entity<StudentBase>().HasMany(e => e.CourseStudents).WithOne(e => e.Student)
-            .HasForeignKey(e => e.StudentId);
-
-            modelBuilder.Entity<AddressBase>().HasKey(e => e.Id);
-            modelBuilder.Entity<AddressBase>()
-            .Property(e => e.Address)
-            .HasMaxLength(50)
-            .IsRequired();
-
-            modelBuilder.Entity<StudentBase>().HasOne(e => e.Address) // MEKY MEKIN KAP
-           .WithOne(e => e.Student)
-           .HasForeignKey<AddressBase>(e => e.StudentId);
+            .HasForeignKey(e => e.StudentId);                  
 
         }
         public StudentDbContext(DbContextOptions<StudentDbContext> options) : base(options)
