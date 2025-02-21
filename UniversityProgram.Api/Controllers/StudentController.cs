@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
+using UniversityProgram.Api.ErrorCodes;
 using UniversityProgram.Api.Entities;
 using UniversityProgram.Api.Map;
 using UniversityProgram.Api.Models.Course;
@@ -153,7 +154,11 @@ namespace UniversityProgram.Api.Controllers
             var result = await _studentService.Update(Id, model, cancellationToken);
             if (!result.Success)
             {
-                return NotFound(result.Message);
+                if (result.Message == ErrorCodesBase.NotFound)
+                {
+                    return NotFound(result.Message);
+                }
+                return BadRequest(result.Message);
             }
             else return Ok(result);
 
@@ -271,7 +276,11 @@ namespace UniversityProgram.Api.Controllers
             var result = await _studentService.Delete(Id, cancellationToken);
             if (!result.Success)
             {
-                return NotFound(result.Message);
+                if (result.Message == ErrorCodesBase.NotFound)
+                {
+                    return NotFound(result.Message);
+                }
+                return BadRequest(result.Message);
             }
             else return Ok(result);
         }

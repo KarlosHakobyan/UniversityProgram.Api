@@ -3,6 +3,7 @@ using UniversityProgram.Api.Entities;
 using UniversityProgram.Api.Map;
 using UniversityProgram.Api.Models;
 using UniversityProgram.Api.Models.Student;
+using UniversityProgram.Api.ErrorCodes;
 using UniversityProgram.Api.Repositories;
 
 namespace UniversityProgram.Api.Services.StudentServices
@@ -46,7 +47,7 @@ namespace UniversityProgram.Api.Services.StudentServices
             var student = await _uow.StudentRepository.GetStudentByID(Id, cancellationToken);
             if (student == null)
             {
-                return new Result(false, "Student not found");
+                return new Result(false,ErrorCodesBase.NotFound);
             }
             student.Email = model.Email is not null ? model.Email : student.Email;
             _uow.StudentRepository.UpdateStudent(student);
