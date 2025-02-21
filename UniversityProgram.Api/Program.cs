@@ -1,17 +1,14 @@
 
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using UniversityProgram.Api.Models;
-using UniversityProgram.Api.Models.Laptop;
-using UniversityProgram.Api.Services;
 using UniversityProgram.Api.Validators.CourseValidations;
 using UniversityProgram.Api.Validators.LaptopValidations;
 using UniversityProgram.Api.Validators.StudentValidations;
 using UniversityProgram.Api.Map;
-using UniversityProgram.Api.Repositories;
-using UniversityProgram.Api.Repositories.CourseRep;
-using UniversityProgram.Api.Repositories.StudentRep;
-using UniversityProgram.Api.Services.StudentServices;
+using UniversityProgram.BLL.Models.Laptop;
+using UniversityProgram.Data;
+using UniversityProgram.Data.Repositories;
+using UniversityProgram.BLL.Services.StudentServices;
 
 namespace UniversityProgram.Api
 {

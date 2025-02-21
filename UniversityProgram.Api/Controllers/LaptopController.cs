@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using UniversityProgram.Api.Entities;
-using UniversityProgram.Api.Models.Laptop;
-using UniversityProgram.Api.Models.Student;
-using UniversityProgram.Api.Models.CPU;
-using UniversityProgram.Api.Models.Library;
 using System.Threading;
 using UniversityProgram.Api.Validators.LaptopValidations;
 using FluentValidation;
 using AutoMapper;
+using UniversityProgram.BLL.Models.Laptop;
+using UniversityProgram.BLL.Models.CPU;
+using UniversityProgram.Data;
+using UniversityProgram.Data.Entities;
 
 namespace UniversityProgram.Api.Controllers
 {

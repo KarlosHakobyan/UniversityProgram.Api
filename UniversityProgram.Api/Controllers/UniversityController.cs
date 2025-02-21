@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using UniversityProgram.Api.Entities;
-using UniversityProgram.Api.Models.Laptop;
-using UniversityProgram.Api.Models.Student;
-using UniversityProgram.Api.Models.University;
-using UniversityProgram.Api.Models.University.UniversityAddModel;
-using UniversityProgram.Api.Models.UniversityModel;
 using System.Threading;
 using System.Threading.Tasks;
+using UniversityProgram.BLL.Models.University;
+using UniversityProgram.Data;
+using UniversityProgram.Data.Entities;
 
 namespace UniversityProgram.Api.Controllers
 {

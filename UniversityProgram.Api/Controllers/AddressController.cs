@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
-using UniversityProgram.Api.Entities;
-using UniversityProgram.Api.Models.Address;
-using UniversityProgram.Api.Models.Laptop;
-using UniversityProgram.Api.Models.University;
+using UniversityProgram.BLL.Models.Address;
+using UniversityProgram.Data;
+using UniversityProgram.Data.Entities;
 
 namespace UniversityProgram.Api.Controllers
 {

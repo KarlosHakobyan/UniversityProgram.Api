@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
-using UniversityProgram.Api.Models.Course;
-using UniversityProgram.Api.Models.Laptop;
+using UniversityProgram.BLL.Models.Course;
 
 namespace UniversityProgram.Api.Validators.CourseValidations
 {

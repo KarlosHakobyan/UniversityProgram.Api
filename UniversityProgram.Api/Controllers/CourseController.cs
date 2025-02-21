@@ -3,11 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
-using UniversityProgram.Api.Entities;
-using UniversityProgram.Api.Models.Course;
-using UniversityProgram.Api.Models.CPU;
-using UniversityProgram.Api.Repositories;
-using UniversityProgram.Api.Repositories.CourseRep;
+using UniversityProgram.BLL.Models.Course;
+using UniversityProgram.Data.Entities;
+using UniversityProgram.Data.Repositories;
 
 namespace UniversityProgram.Api.Controllers
 {

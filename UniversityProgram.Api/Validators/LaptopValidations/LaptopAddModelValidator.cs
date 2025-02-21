@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using UniversityProgram.Api.Models.Laptop;
+using UniversityProgram.BLL.Models.Laptop;
 
 namespace UniversityProgram.Api.Validators.LaptopValidations
 {

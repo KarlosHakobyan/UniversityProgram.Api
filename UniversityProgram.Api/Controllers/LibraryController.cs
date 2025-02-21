@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using UniversityProgram.Api.Entities;
-using UniversityProgram.Api.Models.Library;
-using UniversityProgram.Api.Models.UniversityModel;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using UniversityProgram.BLL.Models.Library;
+using UniversityProgram.Data;
+using UniversityProgram.Data.Entities;
 
 namespace UniversityProgram.Api.Controllers
 {

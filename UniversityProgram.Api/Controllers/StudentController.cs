@@ -7,19 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
-using UniversityProgram.Api.ErrorCodes;
-using UniversityProgram.Api.Entities;
 using UniversityProgram.Api.Map;
-using UniversityProgram.Api.Models.Course;
-using UniversityProgram.Api.Models.CPU;
-using UniversityProgram.Api.Models.Laptop;
-using UniversityProgram.Api.Models.Student;
-using UniversityProgram.Api.Repositories;
-using UniversityProgram.Api.Repositories.CourseRep;
-using UniversityProgram.Api.Repositories.StudentRep;
-using UniversityProgram.Api.Services;
-using UniversityProgram.Api.Services.StudentServices;
-using UniversityProgram.Api.Models;
+using UniversityProgram.BLL.Services.StudentServices;
+using UniversityProgram.BLL.ErrorCodes;
+using UniversityProgram.BLL.Models.Student;
+using UniversityProgram.Data.Entities;
 
 namespace UniversityProgram.Api.Controllers
 {
@@ -35,6 +27,8 @@ namespace UniversityProgram.Api.Controllers
         }
 
         #region HTTPPOST`s
+
+
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] StudentAddModel model, CancellationToken cancellationToken)
         {
@@ -65,6 +59,8 @@ namespace UniversityProgram.Api.Controllers
         #endregion
 
         #region HPPTGET`s
+
+
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
@@ -155,7 +151,9 @@ namespace UniversityProgram.Api.Controllers
          }*/
         #endregion
 
+
         #region HTTPPUT`s
+
 
         [HttpPut("{Id}")]
         public async Task<IActionResult> Update([FromRoute] int Id, [FromBody] StudentUpdateModel model, CancellationToken cancellationToken)
@@ -197,7 +195,7 @@ namespace UniversityProgram.Api.Controllers
 
 
 
-        ///***********************************>>>vvv PAYMENT SYSTEM vvv<<<****************************************
+        ///***********************************>>>vvv PAYMENT SYSTEM (BL) vvv<<<****************************************
 
         [HttpPut("{Id}/pay/{courseId}")]
         public async Task<IActionResult> PayForCourse([FromRoute] int Id, [FromRoute] int courseId, CancellationToken cancellationToken)
@@ -215,7 +213,7 @@ namespace UniversityProgram.Api.Controllers
                 return Ok();
         }
 
-        ///***********************************>>>^^^ PAYMENT SYSTEM ^^^<<<****************************************
+        ///***********************************>>>^^^ PAYMENT SYSTEM  (BL) ^^^<<<****************************************
 
         /*[HttpPut("{Id}/course")]
         public async Task<IActionResult> AddCourse([FromRoute] int Id, [FromQuery] int courseId, CancellationToken cancellationToken)

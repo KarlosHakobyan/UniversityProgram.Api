@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using UniversityProgram.Api.Entities;
-using UniversityProgram.Api.Models.Laptop;
+using UniversityProgram.BLL.Models.Laptop;
+using UniversityProgram.Data.Entities;
 
 namespace UniversityProgram.Api.Map
 {
