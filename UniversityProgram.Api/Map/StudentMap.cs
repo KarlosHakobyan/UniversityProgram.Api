@@ -51,6 +51,7 @@ namespace UniversityProgram.Api.Map
             };
         }
 
+
         public static StudentWithCourseModel MapStudentWithCourseModel(this StudentBase student)
         {
             var models = student.CourseStudents.Select(e => new CourseModel()

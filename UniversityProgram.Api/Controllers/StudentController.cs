@@ -19,6 +19,7 @@ using UniversityProgram.Api.Repositories.CourseRep;
 using UniversityProgram.Api.Repositories.StudentRep;
 using UniversityProgram.Api.Services;
 using UniversityProgram.Api.Services.StudentServices;
+using UniversityProgram.Api.Models;
 
 namespace UniversityProgram.Api.Controllers
 {
@@ -85,65 +86,73 @@ namespace UniversityProgram.Api.Controllers
         [HttpGet("{Id}/Laptop")]
         public async Task<IActionResult> GetByIdWithLaptop([FromRoute] int Id, CancellationToken cancellationToken)
         {
-            var student = await _studentService.GetByIdWithLaptop(Id, cancellationToken);
-            if (student == null)
+            var result = await _studentService.GetByIdWithLaptop(Id, cancellationToken);
+            if (!result.Success)
             {
-                return NotFound();
+                if (result.ErrorType == ErrorType.NotFound)
+                {
+                    return NotFound("Student not found");
+                }
+                if (result.ErrorType == ErrorType.LaptopNotFound)
+                {
+                    return BadRequest($"Student with Id->{Id} doesn't have a laptop");
+                }
+
             }
-            return Ok(student);
+
+            return Ok(result.Data);
         }
 
-       /* [HttpGet("{Id}/course")]
+        [HttpGet("{Id}/course")]
         public async Task<IActionResult> GetWithCourses([FromRoute] int Id, CancellationToken cancellationToken)
         {
-            var student = await _uow.StudentRepository.GetByIdWithCourses(Id, cancellationToken);
-            if (student == null)
+            var result = await _studentService.GetStudentByIdWithCourses(Id, cancellationToken);
+            if (result.ErrorType == ErrorType.NotFound)
             {
-                return NotFound();
+                return NotFound("Student not found");
             }
-
-            return Ok(student.MapStudentWithCourseModel());
+            return Ok(result.Data);
         }
+        /*
+         [HttpGet("with_laptop")]
+         public async Task<IActionResult> GetAllStudentWithLaptop(CancellationToken cancellationToken)
+         {
+             var students = await _uow.StudentRepository.GetAllStudentWithLaptop(cancellationToken);
 
-        [HttpGet("with_laptop")]
-        public async Task<IActionResult> GetAllStudentWithLaptop(CancellationToken cancellationToken)
-        {
-            var students = await _uow.StudentRepository.GetAllStudentWithLaptop(cancellationToken);
+             if (students == null)
+             {
+                 return NotFound();
+             }
 
-            if (students == null)
-            {
-                return NotFound();
-            }
+             var studentModels = students.Select(student => new StudentWithLaptopModel
+             {
+                 Id = student.Id,
+                 Name = student.Name,
+                 Email = student.Email,
+                 Laptop = student.Laptop is not null
+                     ? new LaptopWithCpuModel
+                     {
+                         Id = student.Laptop.Id,
+                         Name = student.Laptop.Name,
+                     }
+                     : null
+             }).ToList();
 
-            var studentModels = students.Select(student => new StudentWithLaptopModel
-            {
-                Id = student.Id,
-                Name = student.Name,
-                Email = student.Email,
-                Laptop = student.Laptop is not null
-                    ? new LaptopWithCpuModel
-                    {
-                        Id = student.Laptop.Id,
-                        Name = student.Laptop.Name,
-                    }
-                    : null
-            }).ToList();
+             return Ok(studentModels);
+         }
 
-            return Ok(studentModels);
-        }
-*/
-/*
-        [HttpGet("{Id}/with_laptop")]
-        public async Task<IActionResult> GetById_StudentWithLaptop([FromRoute] int Id, CancellationToken cancellationToken)
-        {
-            var student = await _uow.StudentRepository.GetById_StudentWithLaptop(Id, cancellationToken);
-            if (student == null)
-            {
-                return NotFound();
-            }
+ /*
+         [HttpGet("{Id}/with_laptop")]
+         public async Task<IActionResult> GetById_StudentWithLaptop([FromRoute] int Id, CancellationToken cancellationToken)
+         {
+             var student = await _uow.StudentRepository.GetById_StudentWithLaptop(Id, cancellationToken);
+             if (student == null)
+             {
+                 return NotFound();
+             }
 
-            return Ok(student.MapToStudentWithLaptop());
-        }*/
+             return Ok(student.MapToStudentWithLaptop());
+         }*/
         #endregion
 
         #region HTTPPUT`s
@@ -154,69 +163,57 @@ namespace UniversityProgram.Api.Controllers
             var result = await _studentService.Update(Id, model, cancellationToken);
             if (!result.Success)
             {
-                if (result.Message == ErrorCodesBase.NotFound)
+                if (result.ErrorType == ErrorType.NotFound)
                 {
-                    return NotFound(result.Message);
+                    return NotFound();
                 }
                 return BadRequest(result.Message);
             }
             else return Ok(result);
 
         }
-/*
+
         [HttpPut("{Id}/addmoney")]
         public async Task<IActionResult> AddMoney([FromRoute] int Id, [FromQuery] decimal money,
             [FromServices] IValidator<StudentBase> validator,
             CancellationToken cancellationToken)
         {
-            var student = await _uow.StudentRepository.GetStudentByID(Id,cancellationToken);
-            if (student == null)
+            
+
+            var validResult = await validator.ValidateAsync(new StudentBase { Money = money }, cancellationToken);
+            
+            if (!validResult.IsValid)
+            {
+                return BadRequest(validResult.Errors);
+            }
+
+            var result = await _studentService.AddMoney(Id, money, cancellationToken);
+            if (result.ErrorType == ErrorType.NotFound)
             {
                 return NotFound();
             }
-
-            var result = await validator.ValidateAsync(new StudentBase { Money = money },cancellationToken);
-            if (!result.IsValid)
-            {
-                return BadRequest(result.Errors);
-            }
-
-
-            student.Money += money;
-            _uow.StudentRepository.UpdateStudent(student);
-            await _uow.Save(cancellationToken);
             return Ok();
         }
-*/
+
+
+
         ///***********************************>>>vvv PAYMENT SYSTEM vvv<<<****************************************
-/*
+
         [HttpPut("{Id}/pay/{courseId}")]
-        public async Task<IActionResult> PayForCourse([FromRoute] int Id, [FromRoute] int courseId,CancellationToken cancellationToken)
+        public async Task<IActionResult> PayForCourse([FromRoute] int Id, [FromRoute] int courseId, CancellationToken cancellationToken)
         {
-                var student = await _uow.StudentRepository.GetStudentByID(Id,cancellationToken);
-
-                if (student == null)
+            var result = await _studentService.Pay(Id, courseId, cancellationToken);
+           
+                if (result.ErrorType == ErrorType.NotFound)
                 {
                     return NotFound();
                 }
-
-                var courseStudent = await _uow.CourseStudentRepository.GetByIds(Id, courseId, cancellationToken);
-                if (courseStudent == null)
+                else if (result.ErrorType==ErrorType.CommonError)
                 {
-                    return NotFound();
-                }
-
-                if (student.Money < courseStudent.Course.Fee)
-                {
-                    return BadRequest("Not enough money");
-                }
-                else student.Money -= courseStudent.Course.Fee;
-                _uow.StudentRepository.UpdateStudent(student);
-                courseStudent.Paid = true;
-                _uow.CourseStudentRepository.UpdateCourseStudent(courseStudent);
-                await _uow.Save(cancellationToken);
+                    return BadRequest(result.Message);
+                }            
                 return Ok();
-        }*/
+        }
 
         ///***********************************>>>^^^ PAYMENT SYSTEM ^^^<<<****************************************
 
@@ -276,27 +273,27 @@ namespace UniversityProgram.Api.Controllers
             var result = await _studentService.Delete(Id, cancellationToken);
             if (!result.Success)
             {
-                if (result.Message == ErrorCodesBase.NotFound)
+                if (result.ErrorType == ErrorType.NotFound)
                 {
-                    return NotFound(result.Message);
+                    return NotFound();
                 }
                 return BadRequest(result.Message);
             }
             else return Ok(result);
         }
-/*
-        [HttpDelete("{Id}/with_laptop")]
-        public async Task<IActionResult> Delete_StudentWithLaptop([FromRoute] int Id, CancellationToken cancellationToken)
-        {
-            var student = await _uow.StudentRepository.GetById_StudentWithLaptop(Id, cancellationToken);
-            if (student == null)
-            {
-                return NotFound();
-            }
-            _uow.StudentRepository.DeleteStudent(student);
-            await _uow.Save(cancellationToken);
-            return Ok();
-        }*/
+        /*
+                [HttpDelete("{Id}/with_laptop")]
+                public async Task<IActionResult> Delete_StudentWithLaptop([FromRoute] int Id, CancellationToken cancellationToken)
+                {
+                    var student = await _uow.StudentRepository.GetById_StudentWithLaptop(Id, cancellationToken);
+                    if (student == null)
+                    {
+                        return NotFound();
+                    }
+                    _uow.StudentRepository.DeleteStudent(student);
+                    await _uow.Save(cancellationToken);
+                    return Ok();
+                }*/
         #endregion
 
 
