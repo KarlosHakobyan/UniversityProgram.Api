@@ -81,8 +81,22 @@ namespace UniversityProgram.Data
             modelBuilder.Entity<Course>().HasMany(e => e.CourseStudents).WithOne(e => e.Course)
             .HasForeignKey(e => e.CourseId);
             modelBuilder.Entity<StudentBase>().HasMany(e => e.CourseStudents).WithOne(e => e.Student)
-            .HasForeignKey(e => e.StudentId);                  
+            .HasForeignKey(e => e.StudentId);
 
+
+            //////////SEED///////////
+
+
+            modelBuilder.Entity<StudentBase>().HasData(
+            new StudentBase
+
+            {
+                Id = 1,
+                Name = "Karen",
+                Email = "Kar@mail.ru",
+                Address = "Monument"
+            }
+                );
         }
         public StudentDbContext(DbContextOptions<StudentDbContext> options) : base(options)
         {

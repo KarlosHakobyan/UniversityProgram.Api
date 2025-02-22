@@ -104,7 +104,7 @@ namespace UniversityProgram.BLL.Services.StudentServices
                 return Result.Error(ErrorType.NotFound);
             }
 
-            if (student.Money < courseStudent.Course.Fee)
+            if (student.Money <= courseStudent.Course.Fee)
             {
                 return Result.Error(ErrorType.CommonError, "Not enough money");
             }
