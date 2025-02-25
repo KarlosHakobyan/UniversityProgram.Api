@@ -17,7 +17,7 @@ internal class StudentRepositoryJson : IStudentRepository
     }
     public void AddStudent(StudentBase student, CancellationToken token = default)
     {
-        _jsonDataService.WriteData(student);
+        _jsonDataService.Add(student);
     }
 
     public void DeleteStudent(StudentBase student, CancellationToken token = default)
@@ -50,10 +50,10 @@ internal class StudentRepositoryJson : IStudentRepository
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<StudentBase>> GetStudents(CancellationToken token = default)
+    public async Task<IEnumerable<StudentBase>> GetStudents(CancellationToken token = default)
     {
-        var student = _jsonDataService.ReadData<StudentBase>();
-        return Task.FromResult(new List<StudentBase> { student }.AsEnumerable());
+        var student = await _jsonDataService.GetAllStudents();
+        return student;
     }
 
     public void UpdateStudent(StudentBase student)

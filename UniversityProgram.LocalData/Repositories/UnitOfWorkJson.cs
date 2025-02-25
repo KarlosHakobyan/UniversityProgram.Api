@@ -27,8 +27,8 @@ public class UnitOfWorkJson : IUnitOfWork
         throw new NotImplementedException();
     }
 
-    public Task Save(CancellationToken token)
+    public async Task Save(CancellationToken token)
     {
-        throw new NotImplementedException();
+        await _service.SaveChangesAsync();
     }
 }

@@ -6,7 +6,7 @@ using UniversityProgram.Domain.BaseRepositories.StudentRepBase;
 
 namespace UniversityProgram.Data.Repositories
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly StudentDbContext _ctx;
 

@@ -5,28 +5,60 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using UniversityProgram.Domain.Entities;
 
 namespace UniversityProgram.LocalData;
 public class JsonDataService : IJsonDataService
 {
-    const string filePath = "data1.json";
-    public void WriteData<T>(T data)
+    const string filePath = "./students.json";
+    private List<StudentBase> Students = new List<StudentBase>();
+
+    public void Add(StudentBase student)
     {
+        var students = ReadDataAsync<StudentBase>().Result;
+        var maxId = students.Max(e => e.Id);
+        student.Id = maxId + 1;
+        Students.Add(student);
+    }
+
+    public async Task<IEnumerable<StudentBase>> GetAllStudents()
+    {
+        var students = await ReadDataAsync<StudentBase>();
+        return students;
+    }
+
+    private async Task WriteDataAsync<T>()
+    {
+        var students = ReadDataAsync<StudentBase>();
+        Students.AddRange(await students);
+        if (!File.Exists(filePath))
+        {
+            File.Create(filePath).Close();
+        }
         using (StreamWriter streamWriter = new StreamWriter(filePath))
         {
-            string json = JsonSerializer.Serialize(data);
-            streamWriter.Write(json);
+            string json = JsonSerializer.Serialize(Students);
+            await streamWriter.WriteAsync(json);
         };
 
     }
-
-    public T ReadData<T>()
+    private async Task <IEnumerable<T>> ReadDataAsync<T>()
     {
+        if (!File.Exists(filePath))
+        {
+            return new List<T>();
+        }
         using (StreamReader streamReader = new StreamReader(filePath))
         {
             string json = streamReader.ReadToEnd();
-            return JsonSerializer.Deserialize<T>(json);
+            return JsonSerializer.Deserialize <List<T>>(json);
         };
 
     }
+
+    public async Task SaveChangesAsync()
+    {
+        await WriteDataAsync<StudentBase>();
+    }
+
 }

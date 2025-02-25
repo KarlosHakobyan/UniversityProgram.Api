@@ -3,7 +3,7 @@ using UniversityProgram.Domain.BaseRepositories.StudentRepBase;
 
 namespace UniversityProgram.Domain.BaseRepositories
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork
     {
         Task Save(CancellationToken token);
 
