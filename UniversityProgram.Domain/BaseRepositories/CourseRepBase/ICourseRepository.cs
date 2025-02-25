@@ -1,6 +1,6 @@
-﻿using UniversityProgram.Data.Entities;
+﻿using UniversityProgram.Domain.Entities;
 
-namespace UniversityProgram.Data.Repositories.CourseRep
+namespace UniversityProgram.Domain.BaseRepositories.CourseRepBase
 {
     public interface ICourseRepository
     {

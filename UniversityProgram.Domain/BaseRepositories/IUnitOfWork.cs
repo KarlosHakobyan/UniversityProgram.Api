@@ -1,7 +1,7 @@
-﻿using UniversityProgram.Data.Repositories.CourseRep;
-using UniversityProgram.Data.Repositories.StudentRep;
+﻿using UniversityProgram.Domain.BaseRepositories.CourseRepBase;
+using UniversityProgram.Domain.BaseRepositories.StudentRepBase;
 
-namespace UniversityProgram.Data.Repositories
+namespace UniversityProgram.Domain.BaseRepositories
 {
     public interface IUnitOfWork : IDisposable
     {

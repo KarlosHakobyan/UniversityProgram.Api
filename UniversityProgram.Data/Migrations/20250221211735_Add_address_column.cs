@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace UniversityProgram.Api.Migrations
+namespace UniversityProgram.Data.Migrations
 {
     /// <inheritdoc />
     public partial class Add_address_column : Migration
@@ -23,7 +23,7 @@ namespace UniversityProgram.Api.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "Address",
-                table: "Students");            
+                table: "Students");
         }
     }
 }

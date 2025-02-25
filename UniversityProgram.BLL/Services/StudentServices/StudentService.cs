@@ -3,6 +3,7 @@ using UniversityProgram.BLL.Models;
 using UniversityProgram.BLL.Models.Student;
 using UniversityProgram.BLL.Map;
 using UniversityProgram.Data.Repositories;
+using UniversityProgram.Domain.BaseRepositories;
 
 namespace UniversityProgram.BLL.Services.StudentServices
 {

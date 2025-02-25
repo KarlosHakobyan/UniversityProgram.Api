@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using UniversityProgram.Data.Entities;
+using UniversityProgram.Domain.Entities;
 
 namespace UniversityProgram.Api.Validators.StudentValidations
 {

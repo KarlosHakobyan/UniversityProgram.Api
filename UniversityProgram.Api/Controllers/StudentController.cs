@@ -1,17 +1,9 @@
-﻿using Azure.Messaging;
-using FluentValidation;
-using FluentValidation.Results;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
-using System.ComponentModel.DataAnnotations;
-using System.Threading;
-using System.Threading.Tasks;
-using UniversityProgram.Api.Map;
 using UniversityProgram.BLL.Services.StudentServices;
 using UniversityProgram.BLL.ErrorCodes;
 using UniversityProgram.BLL.Models.Student;
-using UniversityProgram.Data.Entities;
+using UniversityProgram.Domain.Entities;
 
 namespace UniversityProgram.Api.Controllers
 {

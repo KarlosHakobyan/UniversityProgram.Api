@@ -2,7 +2,7 @@
 using UniversityProgram.BLL.Models.CPU;
 using UniversityProgram.BLL.Models.Laptop;
 using UniversityProgram.BLL.Models.Student;
-using UniversityProgram.Data.Entities;
+using UniversityProgram.Domain.Entities;
 
 namespace UniversityProgram.BLL.Map
 {

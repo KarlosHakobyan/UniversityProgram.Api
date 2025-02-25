@@ -7,6 +7,7 @@ using UniversityProgram.BLL.Services.StudentServices;
 using UniversityProgram.Data;
 using UniversityProgram.Data.Repositories;
 using UniversityProgram.Data.Repositories.StudentRep;
+using UniversityProgram.Domain.BaseRepositories;
 
 var builder = WebApplication.CreateBuilder(args);
 

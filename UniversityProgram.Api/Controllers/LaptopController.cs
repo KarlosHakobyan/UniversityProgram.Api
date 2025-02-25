@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Threading;
-using UniversityProgram.Api.Validators.LaptopValidations;
 using FluentValidation;
 using AutoMapper;
 using UniversityProgram.BLL.Models.Laptop;
 using UniversityProgram.BLL.Models.CPU;
 using UniversityProgram.Data;
-using UniversityProgram.Data.Entities;
+using UniversityProgram.Domain.Entities;
 
 namespace UniversityProgram.Api.Controllers
 {
@@ -71,7 +69,7 @@ namespace UniversityProgram.Api.Controllers
         {
             var laptops = await _ctx.Laptops
                 .Include(e => e.Cpu)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
             var result = _mapper.Map<List <LaptopWithCpuNameModel >> (laptops);
             return Ok(result);
         }

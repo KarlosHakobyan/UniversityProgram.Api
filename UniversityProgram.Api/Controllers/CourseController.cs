@@ -4,8 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using UniversityProgram.BLL.Models.Course;
-using UniversityProgram.Data.Entities;
 using UniversityProgram.Data.Repositories;
+using UniversityProgram.Domain.BaseRepositories;
+using UniversityProgram.Domain.Entities;
 
 namespace UniversityProgram.Api.Controllers
 {

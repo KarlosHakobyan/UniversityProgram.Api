@@ -1,12 +1,11 @@
 global using Xunit;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Moq;
 using UniversityProgram.BLL.ErrorCodes;
 using UniversityProgram.BLL.Services.StudentServices;
-using UniversityProgram.Data.Entities;
-using UniversityProgram.Data.Repositories;
-using UniversityProgram.Data.Repositories.CourseRep;
-using UniversityProgram.Data.Repositories.StudentRep;
+using UniversityProgram.Domain.BaseRepositories;
+using UniversityProgram.Domain.BaseRepositories.CourseRepBase;
+using UniversityProgram.Domain.BaseRepositories.StudentRepBase;
+using UniversityProgram.Domain.Entities;
 
 namespace UniversityProgram.BLL.Tests
 {
@@ -32,7 +31,7 @@ namespace UniversityProgram.BLL.Tests
             const decimal studentMoney = 5000;
             const decimal courseFee = 3000;
             const decimal studentUpdatedMoney = studentMoney - courseFee;
-            var student = new Data.Entities.StudentBase
+            var student = new Domain.Entities.StudentBase
             {
                 Id = studentId,
                 Money = studentMoney

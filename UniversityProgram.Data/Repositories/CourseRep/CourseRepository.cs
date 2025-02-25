@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Threading;
-using UniversityProgram.Data.Entities;
+using UniversityProgram.Domain.BaseRepositories.CourseRepBase;
+using UniversityProgram.Domain.Entities;
 
 namespace UniversityProgram.Data.Repositories.CourseRep
 {

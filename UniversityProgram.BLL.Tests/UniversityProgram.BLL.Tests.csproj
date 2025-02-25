@@ -27,4 +27,8 @@
     <ProjectReference Include="..\UniversityProgram.BLL\UniversityProgram.BLL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UniversityProgram\" />
+  </ItemGroup>
+
 </Project>

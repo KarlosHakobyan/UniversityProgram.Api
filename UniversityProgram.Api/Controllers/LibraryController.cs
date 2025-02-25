@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
 using UniversityProgram.BLL.Models.Library;
 using UniversityProgram.Data;
-using UniversityProgram.Data.Entities;
+using UniversityProgram.Domain.Entities;
 
 namespace UniversityProgram.Api.Controllers
 {
@@ -14,12 +12,12 @@ namespace UniversityProgram.Api.Controllers
     public class LibraryController : ControllerBase
     {
         private readonly StudentDbContext _ctx;
-        private readonly IMapper _mapper;
+        // private readonly IMapper _mapper;
 
-        public LibraryController(StudentDbContext ctx, IMapper mapper)
+        public LibraryController(StudentDbContext ctx) // , IMapper mapper)
         {
             _ctx = ctx;
-            _mapper = mapper;
+            // _mapper = mapper;
         }
 
         [HttpGet]

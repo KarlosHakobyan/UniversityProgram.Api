@@ -9,6 +9,7 @@ using UniversityProgram.BLL.Models.Laptop;
 using UniversityProgram.Data;
 using UniversityProgram.Data.Repositories;
 using UniversityProgram.BLL.Services.StudentServices;
+using UniversityProgram.Domain.BaseRepositories;
 
 namespace UniversityProgram.Api
 {
