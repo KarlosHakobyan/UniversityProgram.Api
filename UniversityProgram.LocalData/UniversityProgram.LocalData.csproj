@@ -7,9 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UniversityProgram.Data\UniversityProgram.Data.csproj" />
     <ProjectReference Include="..\UniversityProgram.Domain\UniversityProgram.Domain.csproj" />
-    <ProjectReference Include="..\UniversityProgram.LocalData\UniversityProgram.LocalData.csproj" />
   </ItemGroup>
 
 </Project>

@@ -10,6 +10,8 @@ using UniversityProgram.Data;
 using UniversityProgram.Data.Repositories;
 using UniversityProgram.BLL.Services.StudentServices;
 using UniversityProgram.Domain.BaseRepositories;
+using UniversityProgram.LocalData.Repositories;
+using UniversityProgram.LocalData;
 
 namespace UniversityProgram.Api
 {
@@ -33,8 +35,9 @@ namespace UniversityProgram.Api
 
                     UnitOfWork kirarelu depqum es repositorynery jnjvum en */
 
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWorkJson>();
             builder.Services.AddScoped<IStudentService, StudentService>();
+            builder.Services.AddScoped<IJsonDataService, JsonDataService>();
 
             var app = builder.Build();
 
