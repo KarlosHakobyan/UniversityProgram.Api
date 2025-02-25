@@ -11,7 +11,7 @@ namespace UniversityProgram.LocalData;
 public class JsonDataService : IJsonDataService
 {
     const string filePath = "./students.json";
-    private List<StudentBase> Students = new List<StudentBase>();
+    private readonly List<StudentBase> Students = new List<StudentBase>();
 
     public void Add(StudentBase student)
     {
@@ -42,7 +42,7 @@ public class JsonDataService : IJsonDataService
         };
 
     }
-    private async Task <IEnumerable<T>> ReadDataAsync<T>()
+    private static async Task <IEnumerable<T>> ReadDataAsync<T>()
     {
         if (!File.Exists(filePath))
         {

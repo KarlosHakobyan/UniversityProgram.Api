@@ -35,7 +35,8 @@ namespace UniversityProgram.Api
 
                     UnitOfWork kirarelu depqum es repositorynery jnjvum en */
 
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWorkJson>();
+           // builder.Services.AddScoped<IUnitOfWork, UnitOfWorkJson>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IStudentService, StudentService>();
             builder.Services.AddScoped<IJsonDataService, JsonDataService>();
 

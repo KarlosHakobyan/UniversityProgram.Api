@@ -45,8 +45,7 @@ namespace UniversityProgram.Data.Repositories
 
         public void Dispose()
         {
-            transaction.Dispose();
-            _ctx.Dispose();
+            _ctx?.Dispose();
         }
     }
 }

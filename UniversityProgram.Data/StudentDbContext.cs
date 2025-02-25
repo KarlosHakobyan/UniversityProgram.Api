@@ -87,16 +87,15 @@ namespace UniversityProgram.Data
             //////////SEED///////////
 
 
-            modelBuilder.Entity<StudentBase>().HasData(
+           /* modelBuilder.Entity<StudentBase>().HasData(
             new StudentBase
 
             {
                 Id = 1,
                 Name = "Karen",
-                Email = "Kar@mail.ru",
-                Address = "Monument"
+                Email = "Kar@mail.ru",             
             }
-                );
+                );*/
         }
         public StudentDbContext(DbContextOptions<StudentDbContext> options) : base(options)
         {

@@ -10,7 +10,7 @@ using UniversityProgram.Domain.BaseRepositories.StudentRepBase;
 namespace UniversityProgram.LocalData.Repositories;
 public class UnitOfWorkJson : IUnitOfWork
 {
-    private JsonDataService _service;
+    private readonly JsonDataService _service;
 
     public UnitOfWorkJson(IJsonDataService service)
     {
@@ -22,10 +22,7 @@ public class UnitOfWorkJson : IUnitOfWork
 
     public IStudentRepository StudentRepository => new StudentRepositoryJson(_service);
 
-    public void Dispose()
-    {
-        throw new NotImplementedException();
-    }
+
 
     public async Task Save(CancellationToken token)
     {
