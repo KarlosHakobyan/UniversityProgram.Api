@@ -11,11 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniversityProgram.BLL", "Un
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniversityProgram.BLL.Tests", "UniversityProgram.BLL.Tests\UniversityProgram.BLL.Tests.csproj", "{A1C5581A-134F-4788-8BCA-F03C6590518E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewApi", "NewApi\NewApi.csproj", "{01648AEC-8ABD-486B-BFC1-62AC2458EB28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewApi", "NewApi\NewApi.csproj", "{01648AEC-8ABD-486B-BFC1-62AC2458EB28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversityProgram.Domain", "UniversityProgram.Domain\UniversityProgram.Domain.csproj", "{F6864B2B-2AF0-423F-8927-2FA5A1D356A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniversityProgram.Domain", "UniversityProgram.Domain\UniversityProgram.Domain.csproj", "{F6864B2B-2AF0-423F-8927-2FA5A1D356A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversityProgram.LocalData", "UniversityProgram.LocalData\UniversityProgram.LocalData.csproj", "{047C60F1-51A8-4191-8B2F-36B04D02D600}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniversityProgram.LocalData", "UniversityProgram.LocalData\UniversityProgram.LocalData.csproj", "{047C60F1-51A8-4191-8B2F-36B04D02D600}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbFirst.Api", "DbFirst.Api\DbFirst.Api.csproj", "{7A239096-7B41-4936-BE03-CCA20D089D68}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{047C60F1-51A8-4191-8B2F-36B04D02D600}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{047C60F1-51A8-4191-8B2F-36B04D02D600}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{047C60F1-51A8-4191-8B2F-36B04D02D600}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A239096-7B41-4936-BE03-CCA20D089D68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A239096-7B41-4936-BE03-CCA20D089D68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A239096-7B41-4936-BE03-CCA20D089D68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A239096-7B41-4936-BE03-CCA20D089D68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
