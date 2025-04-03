@@ -18,20 +18,21 @@
 
 <a class="nav-link text-dark" asp-controller="Student" asp-action="UserPage">User</a>
 
+<a class="btn btn-outline-primary" asp-controller="Student" asp-action="StudentCreate">Create new student</a>
+
 <table class="table">
     <thead>
         <tr>
+            <th>Image</th>
             <th>Name</th>
             <th>Age</th>
-            <th>Image</th>
+            <th>Email</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.Name</td>
-                <td>@item.Age</td>
                 <td>
                     @if (string.IsNullOrEmpty(item.ImageUrl))
                     {
@@ -42,7 +43,15 @@
                         <img style="width: 50px" src="@item.ImageUrl" />
                     }
                 </td>
-
+                <td>@item.Name</td>
+                <td>@item.Age</td>
+                <td>@item.Email</td>
+                <td>
+                    <form asp-controller="Student" asp-action="Delete" method="post">
+                        <input type="hidden" name="email" value="@item.Email"></input>
+                        <button type="submit" class="btn btn-outline-danger">Delete</button>
+                    </form>
+                </td>
             </tr>    
         
         
