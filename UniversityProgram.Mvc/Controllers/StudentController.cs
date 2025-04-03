@@ -10,6 +10,7 @@ namespace UniversityProgram.Mvc.Controllers
             ViewData["StudentAge"] = 28;
             ViewBag.StudentName = "Vazgen";
             ViewBag.Title = 4;
+            TempData["Student"] = "Samvel";
             return View();
         }
 

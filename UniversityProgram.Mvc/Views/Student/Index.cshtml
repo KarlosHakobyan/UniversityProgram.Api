@@ -7,11 +7,14 @@
     string age = ViewData["StudentAge"].ToString();
     string stdName = ViewBag.StudentName;
     int age1 = ViewBag.Title;
+    var student = TempData["Student"];
 }
 
 <p>Welcome to students page.</p>
 <p>Student name is @studentName and his age is @age y.o.</p>
 <p>Student name is @stdName and age is @age1</p>
+<p>Student name is @student</p>
+
 
 <a class="nav-link text-dark" asp-controller="Student" asp-action="New">New</a>
 
