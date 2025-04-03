@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using UniversityProgram.Mvc.Models;
 
 namespace UniversityProgram.Mvc.Controllers
 {
@@ -17,6 +18,12 @@ namespace UniversityProgram.Mvc.Controllers
         public IActionResult New()
         {
             return View();
+        }
+
+        public IActionResult UserPage()
+        {
+            var user = new UserViewModel() { Name = "Gaspar", Age = 25 };
+            return View("User",user);
         }
     }
 }
