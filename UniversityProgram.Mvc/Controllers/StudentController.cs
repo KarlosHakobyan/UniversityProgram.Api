@@ -8,6 +8,8 @@ namespace UniversityProgram.Mvc.Controllers
         {
             ViewData["StudentName"] = "Aram";
             ViewData["StudentAge"] = 28;
+            ViewBag.StudentName = "Vazgen";
+            ViewBag.Title = 4;
             return View();
         }
 
