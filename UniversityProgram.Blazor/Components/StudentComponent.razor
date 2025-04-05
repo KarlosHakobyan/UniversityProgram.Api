@@ -1,0 +1,12 @@
+﻿@page "/student"
+@inject HttpClient Http
+
+<PageTitle>Student</PageTitle>
+<h3>StudentComponent</h3>
+
+@code {
+    override protected async Task OnInitializedAsync()
+    {
+        var response = await Http.GetAsync("https://localhost:5001/Students");
+    }
+}
