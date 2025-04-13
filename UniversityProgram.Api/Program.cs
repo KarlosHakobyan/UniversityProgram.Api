@@ -19,11 +19,11 @@ namespace UniversityProgram.Api
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);                    
+            var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddDbContext<StudentDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("StudentDb")));           
+            builder.Services.AddDbContext<StudentDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("StudentDb")));
             builder.Services.AddScoped<IValidator<LaptopAddModel>, LaptopAddModelValidator>();
             builder.Services.AddValidatorsFromAssemblyContaining<LaptopAddModelValidator>(ServiceLifetime.Transient);
             builder.Services.AddValidatorsFromAssemblyContaining<CourseValidator>(ServiceLifetime.Transient);
@@ -35,19 +35,23 @@ namespace UniversityProgram.Api
 
                     UnitOfWork kirarelu depqum es repositorynery jnjvum en */
 
-           // builder.Services.AddScoped<IUnitOfWork, UnitOfWorkJson>();
+            // builder.Services.AddScoped<IUnitOfWork, UnitOfWorkJson>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IStudentService, StudentService>();
             builder.Services.AddScoped<IJsonDataService, JsonDataService>();
 
             var app = builder.Build();
 
-            
-        
-             app.UseSwagger();
-             app.UseSwaggerUI();
-            
-              
+
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
+            app.UseCors(policy=> 
+            policy.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            );
+
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
