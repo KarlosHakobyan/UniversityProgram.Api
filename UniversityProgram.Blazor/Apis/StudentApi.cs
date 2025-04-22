@@ -12,6 +12,19 @@ namespace UniversityProgram.Blazor.Apis
             _client = client;
         }
 
+        public async Task<StudentModel> GetById(int Id)
+        { 
+            var response = await _client.GetAsync($"/Student/{Id}");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<StudentModel>();
+            }
+            else
+            { 
+               throw new Exception("Error" + response.ReasonPhrase);
+            }
+        }
+
         public async Task<IEnumerable<StudentModel>> GetAll()
         {
             var response = await _client.GetAsync("/Student");
@@ -26,6 +39,15 @@ namespace UniversityProgram.Blazor.Apis
                 return Array.Empty<StudentModel>();
             }
             else
+            {
+                throw new Exception("Error" + response.ReasonPhrase);
+            }
+        }
+
+        public async Task Delete(int id)
+        {
+            var response = await _client.DeleteAsync($"/Student/{id}");
+            if (!response.IsSuccessStatusCode)
             {
                 throw new Exception("Error" + response.ReasonPhrase);
             }

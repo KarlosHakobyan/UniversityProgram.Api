@@ -1,10 +1,10 @@
-﻿@page "/students/{Name?}"
+﻿@page "/Students"
 @using UniversityProgram.Blazor.Apis
 @using UniversityProgram.Blazor.Models
 @inject IStudentApi StudentApi
 <PageTitle>Students Page</PageTitle>
 <h3>StudentComponent</h3>
-<p>Student name: @Name</p>
+
 
 @if (isLoading==true)
 {
@@ -22,30 +22,45 @@ else
                 <th>Name</th>
                 <th>Email</th>
                 <th>Money</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var student in Students)
             {
                 <tr>
-                    <td>@student.Name</td>
+                    <td><MudButton OnClick="()=>OpenStudent(student.Id)">@student.Name</MudButton></td>
                     <td>@student.Email</td>
                     <td>@student.Money</td>
+                    <td><MudButton OnClick="async ()=> await DeleteAsync(student.Id)" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error">Delete</MudButton></td>
                 </tr>
             }
         </tbody>
     </table>
 }
 @code {
-    [Parameter]
-    public string? Name { get; set; }
-
+    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
     private bool isLoading = true;
     public List<StudentModel> Students { get; set; } = new List<StudentModel>();
 
     override protected async Task OnInitializedAsync()
     {
+        await RefreshSPage();
+    }
+    private async Task RefreshSPage()
+    {
         Students = (await StudentApi.GetAll()).ToList();
         isLoading = false;
+    }
+    private void OpenStudent(int Id)
+    {
+        NavigationManager.NavigateTo($"/Student/{Id}");
+    }
+
+    private async Task DeleteAsync(int id)
+    {
+        isLoading = true;
+        await StudentApi.Delete(id);
+        await RefreshSPage();
     }
 }

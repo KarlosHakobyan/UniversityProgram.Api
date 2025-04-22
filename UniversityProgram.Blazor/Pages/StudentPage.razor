@@ -1,0 +1,31 @@
+﻿@page "/student/{id:int}"
+
+@using UniversityProgram.Blazor.Apis
+@using UniversityProgram.Blazor.Models
+<h3>StudentPage</h3>
+
+@if (isLoading)
+{
+    <p>Loading..</p>
+}
+else
+{
+    <h3>Student</h3>
+    <p>Name: @Student.Name</p>
+    <p>Name: @Student.Email</p>
+    <p>Name: @Student.Money</p>
+}
+
+@code {
+
+    [Inject] private IStudentApi StudentApi { get; set; } = default!;
+    [Parameter] public int Id { get; set; }
+    private bool isLoading = true;
+
+    private StudentModel Student { get; set; } = new StudentModel();
+    protected override async Task OnInitializedAsync()
+    {
+        Student = await StudentApi.GetById(Id);
+        isLoading = false;
+    }
+}

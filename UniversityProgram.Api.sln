@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniversityProgram.Console",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniversityProgram.Mvc", "UniversityProgram.Mvc\UniversityProgram.Mvc.csproj", "{88FF61A6-8F98-4CA3-93BA-0BBA7DDC6E9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversityProgram.Blazor", "UniversityProgram.Blazor\UniversityProgram.Blazor.csproj", "{00EE0377-2699-45C8-BC5A-F341A4159A07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniversityProgram.Blazor", "UniversityProgram.Blazor\UniversityProgram.Blazor.csproj", "{00EE0377-2699-45C8-BC5A-F341A4159A07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
