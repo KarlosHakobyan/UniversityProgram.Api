@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniversityProgram.Mvc", "Un
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniversityProgram.Blazor", "UniversityProgram.Blazor\UniversityProgram.Blazor.csproj", "{00EE0377-2699-45C8-BC5A-F341A4159A07}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversityProgramBlazor.Test", "UniversityProgramBlazor.Test\UniversityProgramBlazor.Test.csproj", "{52D0A2C7-F9E5-45A8-A273-B1DD67D267ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{00EE0377-2699-45C8-BC5A-F341A4159A07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00EE0377-2699-45C8-BC5A-F341A4159A07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00EE0377-2699-45C8-BC5A-F341A4159A07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52D0A2C7-F9E5-45A8-A273-B1DD67D267ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52D0A2C7-F9E5-45A8-A273-B1DD67D267ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52D0A2C7-F9E5-45A8-A273-B1DD67D267ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52D0A2C7-F9E5-45A8-A273-B1DD67D267ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
