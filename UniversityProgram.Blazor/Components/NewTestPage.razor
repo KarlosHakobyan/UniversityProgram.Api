@@ -1,11 +1,28 @@
-﻿<h3>NewTestPage</h3>
+﻿@page "/NewTestPage"
+@using UniversityProgram.Blazor.Apis
+@using UniversityProgram.Blazor.Models
+<h3>NewTestPage</h3>
 
 <button class="myButton" @onclick="Click">click</button>
 <p id="MyText">user name: @UserName</p>
+
+<button class="get-students" @onclick="GetStudents">Get Students</button>
+
+<p class="student-name">@Model?.Name</p>
+
 @code {
+
+    [Inject] private IStudentApi studentApi { get; set; } = default!;
+    private StudentModel? Model { get; set; }
+
     private string UserName { get; set; } = default!;
     private void Click()
     {
         UserName = "Gago";
+    }
+    private async Task GetStudents()
+    {
+        var students = await studentApi.GetAll();
+        Model = students.First();
     }
 }
