@@ -1,0 +1,83 @@
+﻿@page "/students"
+@using UniversityProgram.Blazor.Apis
+@using UniversityProgram.Blazor.Models
+@inject IStudentApi StudentApi
+<PageTitle>Students Page</PageTitle>
+<h3>StudentComponent</h3>
+
+
+@if (isLoading == true)
+{
+    <p>Loading...</p>
+}
+else if (Students == null || Students.Count == 0)
+{
+    <p>No students</p>
+}
+else
+{
+    <MudDataGrid T="StudentModel" Items="Students" MultiSelection="false"  SelectedItem="SelectedStudent" SortMode="SortMode.Multiple"
+        Filterable="true" Hideable="true" SelectedItemChanged="@SelectedItemChanged">
+        <Columns>
+            <SelectColumn T="StudentModel" />
+            <PropertyColumn Property="x => x.Id" Title="StudentId" />
+            <PropertyColumn Property="x => x.Name" Title="StudentName" />
+            <PropertyColumn Property="x => x.Email" />
+            <PropertyColumn Property="x => x.Money" />
+            <TemplateColumn CellClass="d-flex justify-end">
+                <CellTemplate>
+                    <MudStack Row>
+                        <MudButton OnClick="()=>OpenStudent(context.Item.Id)" Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Surface">Open Student Page</MudButton>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+
+            <TemplateColumn CellClass="d-flex justify-end">
+                <CellTemplate>
+                    <MudStack Row>
+                        <MudButton OnClick="async ()=> await DeleteAsync(context.Item.Id)" Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Error">Delete Student</MudButton>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid>
+    <MudButton OnClick="EditStudent" Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Warning">Update Student</MudButton>
+}
+@code {
+    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
+    private bool isLoading = true;
+    public List<StudentModel> Students { get; set; } = new List<StudentModel>();
+
+    private StudentModel SelectedStudent { get; set; } = default!;
+
+    override protected async Task OnInitializedAsync()
+    {
+        await RefreshSPage();
+    }
+    private async Task RefreshSPage()
+    {
+        Students = (await StudentApi.GetAll()).ToList();
+        isLoading = false;
+    }
+    private void OpenStudent(int Id)
+    {
+        NavigationManager.NavigateTo($"/student/{Id}");
+    }
+
+    private void EditStudent()
+    {
+        NavigationManager.NavigateTo($"/student/edit/{SelectedStudent.Id}");
+    }
+
+    private void SelectedItemChanged(StudentModel student)
+    {
+        SelectedStudent = student;
+    }
+
+    private async Task DeleteAsync(int id)
+    {
+        isLoading = true;
+        await StudentApi.Delete(id);
+        await RefreshSPage();
+    }
+}

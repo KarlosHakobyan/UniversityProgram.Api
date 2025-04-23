@@ -72,6 +72,7 @@ namespace UniversityProgram.BLL.Services.StudentServices
             {
                 return Result.Error(ErrorType.NotFound, "Student not found");
             }
+            student.Name = model.Name is not null ? model.Name : student.Name;
             student.Email = model.Email is not null ? model.Email : student.Email;
             _uow.StudentRepository.UpdateStudent(student);
             await _uow.Save(cancellationToken);

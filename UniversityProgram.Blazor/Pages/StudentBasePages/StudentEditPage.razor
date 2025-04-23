@@ -1,0 +1,41 @@
+﻿@page "/student/edit/{id:int}"
+@using UniversityProgram.Blazor.Apis
+@using UniversityProgram.Blazor.Models
+<h3>StudentEditPage</h3>
+@if (Student == null)
+{
+    <p>Loading..</p>
+}
+else
+{
+    <p>You want to Edit @Student.Name 's data.</p>
+    <MudTextField @bind-Value="Student.Name" Label="Name" Variant="Variant.Text"></MudTextField>
+    <MudTextField @bind-Value="Student.Email" Label="Email" Variant="Variant.Outlined"></MudTextField>
+    <MudButton OnClick="SaveChanges" Variant="Variant.Filled" Color="Color.Success">Save Changes</MudButton>
+}
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    [Inject] private IStudentApi StudentApi { get; set; } = default!;
+    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
+
+    private StudentModel Student { get; set; }= default!;
+    protected override async Task OnInitializedAsync()
+    {
+        Student = await StudentApi.GetById(Id);
+    }
+
+    private async Task SaveChanges()
+    {
+        var updateModel = new StudentUpdateModel
+        {
+            Name = Student.Name,
+            Email = Student.Email
+        };
+      
+        await StudentApi.UpdateStudent(Id, updateModel);
+        NavigationManager.NavigateTo($"/students");
+    }
+}

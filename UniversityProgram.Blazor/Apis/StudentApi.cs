@@ -44,6 +44,15 @@ namespace UniversityProgram.Blazor.Apis
             }
         }
 
+        public async Task UpdateStudent(int Id,StudentUpdateModel model)
+        {
+            var response = await _client.PutAsJsonAsync($"/Student/{Id}", model);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Error" + response.ReasonPhrase);
+            }
+        }
+
         public async Task Delete(int id)
         {
             var response = await _client.DeleteAsync($"/Student/{id}");

@@ -6,6 +6,7 @@ namespace UniversityProgram.Blazor.Apis
     {
         Task<IEnumerable<StudentModel>> GetAll();
         Task<StudentModel> GetById(int Id);
+        Task UpdateStudent(int Id, StudentUpdateModel model);
         Task Delete(int Id);
     }
 }
