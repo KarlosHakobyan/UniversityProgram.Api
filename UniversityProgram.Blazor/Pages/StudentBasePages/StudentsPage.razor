@@ -66,6 +66,11 @@ else
 
     private void EditStudent()
     {
+        if(SelectedStudent==null)
+        {
+            return;
+        }
+
         NavigationManager.NavigateTo($"/student/edit/{SelectedStudent.Id}");
     }
 
@@ -76,6 +81,10 @@ else
 
     private async Task DeleteAsync(int id)
     {
+        if (SelectedStudent == null)
+        {
+            return;
+        }
         isLoading = true;
         await StudentApi.Delete(id);
         await RefreshSPage();
