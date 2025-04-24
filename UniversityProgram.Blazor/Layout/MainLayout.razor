@@ -1,7 +1,9 @@
-﻿@inherits LayoutComponentBase
-
+﻿@using Microsoft.AspNetCore.SignalR.Client
+@inherits LayoutComponentBase
+@inject ISnackbar Snackbar
 <MudThemeProvider />
 <MudPopoverProvider />
+<MudSnackbarProvider/>
 <div class="page">
     <div>
         <NavMenu />
@@ -9,6 +11,9 @@
 
     <main>
         <div class="top-row px-4">
+            <MudBadge Content="count" Color="Color.Primary" Overlap="true" OnClick="ShowNotifications" Class="mx-6 my-4">
+                <MudIcon Icon="@Icons.Material.Filled.Email" @onclick="ShowNotifications" Color="Color.Default" />
+            </MudBadge>
             <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
         </div>
 
@@ -17,3 +22,45 @@
         </article>
     </main>
 </div>
+
+@code {
+    private int count { get; set; } = 0;
+    private HubConnection? hubConnection;
+    private List<string> messages = new List<string>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+        .WithUrl("https://localhost:5001/studentHub")
+        .WithAutomaticReconnect()
+        .Build();
+
+        hubConnection.On<string>("DeleteMessage", async (m) =>
+        {
+            messages.Add(m);
+            count = messages.Count;
+            await InvokeAsync(StateHasChanged);
+        });
+
+        hubConnection.On<string>("UpdateMessage", async (m) =>
+       {
+           messages.Add(m);
+           count = messages.Count;
+           await InvokeAsync(StateHasChanged);
+       });
+
+        await hubConnection.StartAsync();
+    }
+
+    public void ShowNotifications()
+    {   
+
+        foreach(var message in messages)
+        {
+            Snackbar.Add(message, Severity.Info);
+        }
+        messages.Clear();
+        count = 0;
+    }
+
+}

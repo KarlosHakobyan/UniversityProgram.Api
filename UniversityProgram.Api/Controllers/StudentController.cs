@@ -166,7 +166,7 @@ namespace UniversityProgram.Api.Controllers
                 return BadRequest(result.Message);
             }           
             await _hubContext.Clients.All.SendAsync("UpdateMessage", $"Student with ID: {Id} data was updated.");
-            await _hubContext.Clients.All.SendAsync("OnUpdate", $"Students list was updated.");
+          
             return Ok(result);
 
         }
@@ -278,7 +278,6 @@ namespace UniversityProgram.Api.Controllers
                 return BadRequest(result.Message);
             }
             await _hubContext.Clients.All.SendAsync("DeleteMessage", $"Student with ID: {Id} was deleted.");
-            await _hubContext.Clients.All.SendAsync("OnUpdate", $"Students list was updated.");
             return Ok(result);
 
         }
