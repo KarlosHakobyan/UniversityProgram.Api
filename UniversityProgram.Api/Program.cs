@@ -12,6 +12,7 @@ using UniversityProgram.BLL.Services.StudentServices;
 using UniversityProgram.Domain.BaseRepositories;
 using UniversityProgram.LocalData.Repositories;
 using UniversityProgram.LocalData;
+using UniversityProgram.Api.Hubs;
 
 namespace UniversityProgram.Api
 {
@@ -39,6 +40,10 @@ namespace UniversityProgram.Api
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IStudentService, StudentService>();
             builder.Services.AddScoped<IJsonDataService, JsonDataService>();
+            builder.Services.AddSignalR();
+
+
+
 
             var app = builder.Build();
 
@@ -56,6 +61,7 @@ namespace UniversityProgram.Api
 
             app.UseAuthorization();
             app.MapGet("Test", () => 100);
+            app.MapHub<StudentHub>("/studentHub");
 
             app.MapControllers();
 

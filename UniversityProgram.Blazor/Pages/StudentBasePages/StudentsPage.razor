@@ -1,14 +1,15 @@
 ﻿@page "/students"
+@using Microsoft.AspNetCore.SignalR.Client
 @using UniversityProgram.Blazor.Apis
 @using UniversityProgram.Blazor.Models
 @inject IStudentApi StudentApi
 <PageTitle>Students Page</PageTitle>
 <h3>StudentComponent</h3>
-
+<h1>@message</h1>
 
 @if (isLoading == true)
 {
-    <p>Loading...</p>
+    <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true"></MudProgressCircular>
 }
 else if (Students == null || Students.Count == 0)
 {
@@ -16,8 +17,8 @@ else if (Students == null || Students.Count == 0)
 }
 else
 {
-    <MudDataGrid T="StudentModel" Items="Students" MultiSelection="false"  SelectedItem="SelectedStudent" SortMode="SortMode.Multiple"
-        Filterable="true" Hideable="true" SelectedItemChanged="@SelectedItemChanged">
+    <MudDataGrid T="StudentModel" Items="Students" MultiSelection="false" SelectedItem="SelectedStudent" SortMode="SortMode.Multiple"
+                 Filterable="true" Hideable="true" SelectedItemChanged="@SelectedItemChanged">
         <Columns>
             <SelectColumn T="StudentModel" />
             <PropertyColumn Property="x => x.Id" Title="StudentId" />
@@ -47,15 +48,47 @@ else
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
     private bool isLoading = true;
     public List<StudentModel> Students { get; set; } = new List<StudentModel>();
-
+    private HubConnection? hubConnection;
     private StudentModel SelectedStudent { get; set; } = default!;
+    private string message = "";
 
     override protected async Task OnInitializedAsync()
     {
+
+        hubConnection = new HubConnectionBuilder()
+        .WithUrl("https://localhost:5001/studentHub")
+        .WithAutomaticReconnect()
+        .Build();
+
+        hubConnection.On<string>("UpdateMessage", async (msg) =>
+        {
+            message = msg;
+            await InvokeAsync(StateHasChanged);
+        });
+
+
+       hubConnection.On<string>("DeleteMessage", async (msg) =>
+       {
+           message = msg;
+           await InvokeAsync(StateHasChanged);
+       });
+
+       hubConnection.On<string>("OnUpdate", async (m) =>
+       {       
+       await RefreshSPage();
+       
+       message = m;
+       await InvokeAsync(StateHasChanged);
+       });
+
+        await hubConnection.StartAsync();
         await RefreshSPage();
     }
+
     private async Task RefreshSPage()
     {
+        isLoading = true;
+        await InvokeAsync(StateHasChanged);
         Students = (await StudentApi.GetAll()).ToList();
         isLoading = false;
     }
@@ -66,7 +99,7 @@ else
 
     private void EditStudent()
     {
-        if(SelectedStudent==null)
+        if (SelectedStudent == null)
         {
             return;
         }

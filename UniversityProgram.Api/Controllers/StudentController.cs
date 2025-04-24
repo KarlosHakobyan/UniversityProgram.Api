@@ -4,6 +4,8 @@ using UniversityProgram.BLL.Services.StudentServices;
 using UniversityProgram.BLL.ErrorCodes;
 using UniversityProgram.BLL.Models.Student;
 using UniversityProgram.Domain.Entities;
+using Microsoft.AspNetCore.SignalR;
+using UniversityProgram.Api.Hubs;
 
 namespace UniversityProgram.Api.Controllers
 {
@@ -12,10 +14,12 @@ namespace UniversityProgram.Api.Controllers
     public class StudentController : ControllerBase
     {
         private readonly IStudentService _studentService;
+        private readonly IHubContext<StudentHub> _hubContext;
 
-        public StudentController(IStudentService studentService)
+        public StudentController(IStudentService studentService,IHubContext<StudentHub>hubContext)
         {
             _studentService = studentService;
+            _hubContext = hubContext;
         }
 
         #region HTTPPOST`s
@@ -57,6 +61,7 @@ namespace UniversityProgram.Api.Controllers
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
             var students = await _studentService.GetAll(cancellationToken);
+            await Task.Delay(2000, cancellationToken);
             return Ok(students);
         }
 
@@ -99,6 +104,7 @@ namespace UniversityProgram.Api.Controllers
             {
                 return NotFound("Student not found");
             }
+
             return Ok(result.Data);
         }
         /*
@@ -158,8 +164,10 @@ namespace UniversityProgram.Api.Controllers
                     return NotFound();
                 }
                 return BadRequest(result.Message);
-            }
-            else return Ok(result);
+            }           
+            await _hubContext.Clients.All.SendAsync("UpdateMessage", $"Student with ID: {Id} data was updated.");
+            await _hubContext.Clients.All.SendAsync("OnUpdate", $"Students list was updated.");
+            return Ok(result);
 
         }
 
@@ -269,7 +277,10 @@ namespace UniversityProgram.Api.Controllers
                 }
                 return BadRequest(result.Message);
             }
-            else return Ok(result);
+            await _hubContext.Clients.All.SendAsync("DeleteMessage", $"Student with ID: {Id} was deleted.");
+            await _hubContext.Clients.All.SendAsync("OnUpdate", $"Students list was updated.");
+            return Ok(result);
+
         }
         /*
                 [HttpDelete("{Id}/with_laptop")]
