@@ -1,5 +1,6 @@
 
 using Microsoft.AspNetCore.DataProtection;
+using System.Security.Claims;
 
 namespace AuthTest.Api
 {
@@ -30,23 +31,35 @@ namespace AuthTest.Api
                 app.UseSwaggerUI();
             }
 
-            app.Use((ctx,next) =>
-            { 
-                var provider = ctx.RequestServices.GetService<IDataProtectionProvider>();
-                var authCookie = ctx.Request.Cookies["auth"];
-                if (authCookie == null)
+            app.Use((ctx, next) =>
+            {
+                if (!ctx.Request.Path.StartsWithSegments("/login"))
                 {
-                   throw new UnauthorizedAccessException("No auth cookie found");
-                }
-                var protector = provider.CreateProtector("auth-cookie");
-                var unprotectedValue = protector.Unprotect(authCookie);
 
+                    var provider = ctx.RequestServices.GetService<IDataProtectionProvider>();
+                    var authCookie = ctx.Request.Cookies["auth"];
+                    if (authCookie == null)
+                    {
+                        throw new UnauthorizedAccessException("No auth cookie found");
+                    }
+                    var protector = provider!.CreateProtector("auth-cookie");
+                    var unprotectedValue = protector.Unprotect(authCookie);
+                    var values = unprotectedValue.Split(':');
+                    var claim = new List<Claim>()
+                    { 
+                        new Claim (values[0],values[1])
+                    }
+                    ;
+                    var identity = new ClaimsIdentity(claim);
+                    ctx.User = new ClaimsPrincipal(identity);
+                }
                 return next.Invoke();
             });
 
             app.MapGet("/secret", (HttpContext ctx, IDataProtectionProvider provider) =>
-            {                
-                return "SECRET";
+            {
+
+                return ctx.User.FindFirst("email")?.Value;
             });
 
             app.MapGet("/login", (AuthService auth) =>
@@ -70,12 +83,12 @@ namespace AuthTest.Api
             {
                 _accessor = accessor;
                 _provider = provider;
-                
+
             }
 
             public void SignIn()
             {
-                string cookieValue = "email:Karlos";
+                string cookieValue = "email:Karlos@gmail.com";
                 var protector = _provider.CreateProtector("auth-cookie");
                 var protectedValue = protector.Protect(cookieValue);
                 _accessor.HttpContext!.Response.Headers.Add("Set-Cookie", $"auth={protectedValue}");
