@@ -62,6 +62,11 @@ namespace UniversityProgram.Api.Controllers
         {
             var students = await _studentService.GetAll(cancellationToken);
             await Task.Delay(2000, cancellationToken);
+            Response.Cookies.Append("Student", "Student Test Cookie",new CookieOptions
+            { 
+                Secure = true,
+                Expires = DateTimeOffset.UtcNow.AddDays(1),                           
+            });  
             return Ok(students);
         }
 

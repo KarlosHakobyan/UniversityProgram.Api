@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniversityProgram.Blazor", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniversityProgramBlazor.Test", "UniversityProgramBlazor.Test\UniversityProgramBlazor.Test.csproj", "{52D0A2C7-F9E5-45A8-A273-B1DD67D267ED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthTest.Api", "AuthTest.Api\AuthTest.Api.csproj", "{957A2773-B99A-4FEF-B5DB-CFE4C5BE543A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{52D0A2C7-F9E5-45A8-A273-B1DD67D267ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52D0A2C7-F9E5-45A8-A273-B1DD67D267ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52D0A2C7-F9E5-45A8-A273-B1DD67D267ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{957A2773-B99A-4FEF-B5DB-CFE4C5BE543A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{957A2773-B99A-4FEF-B5DB-CFE4C5BE543A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{957A2773-B99A-4FEF-B5DB-CFE4C5BE543A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{957A2773-B99A-4FEF-B5DB-CFE4C5BE543A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
