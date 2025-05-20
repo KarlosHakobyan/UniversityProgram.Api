@@ -1,4 +1,5 @@
 
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.DataProtection;
 using System.Security.Claims;
 
@@ -11,14 +12,12 @@ namespace AuthTest.Api
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
+            const string AuthScheme = "Cookie";
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddDataProtection();
-            builder.Services.AddScoped<AuthService>();
-            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddAuthentication(AuthScheme).AddCookie(AuthScheme).AddCookie("UrishCookie"); // default authentication scheme.
+
 
 
 
@@ -31,30 +30,7 @@ namespace AuthTest.Api
                 app.UseSwaggerUI();
             }
 
-            app.Use((ctx, next) =>
-            {
-                if (!ctx.Request.Path.StartsWithSegments("/login"))
-                {
-
-                    var provider = ctx.RequestServices.GetService<IDataProtectionProvider>();
-                    var authCookie = ctx.Request.Cookies["auth"];
-                    if (authCookie == null)
-                    {
-                        throw new UnauthorizedAccessException("No auth cookie found");
-                    }
-                    var protector = provider!.CreateProtector("auth-cookie");
-                    var unprotectedValue = protector.Unprotect(authCookie);
-                    var values = unprotectedValue.Split(':');
-                    var claim = new List<Claim>()
-                    { 
-                        new Claim (values[0],values[1])
-                    }
-                    ;
-                    var identity = new ClaimsIdentity(claim);
-                    ctx.User = new ClaimsPrincipal(identity);
-                }
-                return next.Invoke();
-            });
+            app.UseAuthentication();
 
             app.MapGet("/secret", (HttpContext ctx, IDataProtectionProvider provider) =>
             {
@@ -62,9 +38,12 @@ namespace AuthTest.Api
                 return ctx.User.FindFirst("email")?.Value;
             });
 
-            app.MapGet("/login", (AuthService auth) =>
+            app.MapGet("/login",async (HttpContext ctx) =>
             {
-                auth.SignIn();
+                var claim = new Claim("Email", "Karlos@gmail.com");
+                var claimsIdentity = new ClaimsIdentity(new List<Claim>(){ claim },AuthScheme);
+                var user = new ClaimsPrincipal(claimsIdentity);
+                ctx.SignInAsync(user);
                 return Results.Ok("Login successful");
             });
 
@@ -73,27 +52,7 @@ namespace AuthTest.Api
 
             app.Run();
         }
-
-        public class AuthService
-        {
-            private readonly IHttpContextAccessor _accessor;
-            private readonly IDataProtectionProvider _provider;
-
-            public AuthService(IHttpContextAccessor accessor, IDataProtectionProvider provider)
-            {
-                _accessor = accessor;
-                _provider = provider;
-
-            }
-
-            public void SignIn()
-            {
-                string cookieValue = "email:Karlos@gmail.com";
-                var protector = _provider.CreateProtector("auth-cookie");
-                var protectedValue = protector.Protect(cookieValue);
-                _accessor.HttpContext!.Response.Headers.Add("Set-Cookie", $"auth={protectedValue}");
-            }
-        }
+        
     }
 }
 
