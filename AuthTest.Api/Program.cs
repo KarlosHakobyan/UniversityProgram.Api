@@ -15,8 +15,11 @@ namespace AuthTest.Api
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
             builder.Services.AddDataProtection();
+            builder.Services.AddScoped<AuthService>();
+            builder.Services.AddHttpContextAccessor();
+
+
 
             var app = builder.Build();
 
@@ -27,26 +30,28 @@ namespace AuthTest.Api
                 app.UseSwaggerUI();
             }
 
-            app.MapGet("/secret", (HttpContext ctx, IDataProtectionProvider provider) =>
-            {
+            app.Use((ctx,next) =>
+            { 
+                var provider = ctx.RequestServices.GetService<IDataProtectionProvider>();
                 var authCookie = ctx.Request.Cookies["auth"];
                 if (authCookie == null)
                 {
-                    ctx.Response.StatusCode=401;
-                    return "Unauthorized";
+                   throw new UnauthorizedAccessException("No auth cookie found");
                 }
                 var protector = provider.CreateProtector("auth-cookie");
                 var unprotectedValue = protector.Unprotect(authCookie);
 
-                return unprotectedValue;
+                return next.Invoke();
             });
 
-            app.MapGet("/login", (HttpContext ctx,IDataProtectionProvider provider) =>
-            {   
-                string cookieValue = "email:Karlos";
-                var protector = provider.CreateProtector("auth-cookie");
-                var protectedValue = protector.Protect(cookieValue);
-                ctx.Response.Headers.Add("Set-Cookie", $"auth={protectedValue}");
+            app.MapGet("/secret", (HttpContext ctx, IDataProtectionProvider provider) =>
+            {                
+                return "SECRET";
+            });
+
+            app.MapGet("/login", (AuthService auth) =>
+            {
+                auth.SignIn();
                 return Results.Ok("Login successful");
             });
 
@@ -55,5 +60,27 @@ namespace AuthTest.Api
 
             app.Run();
         }
+
+        public class AuthService
+        {
+            private readonly IHttpContextAccessor _accessor;
+            private readonly IDataProtectionProvider _provider;
+
+            public AuthService(IHttpContextAccessor accessor, IDataProtectionProvider provider)
+            {
+                _accessor = accessor;
+                _provider = provider;
+                
+            }
+
+            public void SignIn()
+            {
+                string cookieValue = "email:Karlos";
+                var protector = _provider.CreateProtector("auth-cookie");
+                var protectedValue = protector.Protect(cookieValue);
+                _accessor.HttpContext!.Response.Headers.Add("Set-Cookie", $"auth={protectedValue}");
+            }
+        }
     }
 }
+
