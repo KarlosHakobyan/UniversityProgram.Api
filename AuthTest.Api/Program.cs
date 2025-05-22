@@ -17,7 +17,15 @@ namespace AuthTest.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddAuthentication(AuthScheme).AddCookie(AuthScheme).AddCookie("UrishCookie"); // default authentication scheme.
-
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Only Students", policy =>
+                {
+                    policy.AddAuthenticationSchemes(AuthScheme)
+                    .RequireAuthenticatedUser()
+                    .RequireClaim("usertype","student");
+                });
+            });
 
 
 
@@ -31,6 +39,7 @@ namespace AuthTest.Api
             }
 
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapGet("/secret", (HttpContext ctx, IDataProtectionProvider provider) =>
             {
@@ -40,26 +49,19 @@ namespace AuthTest.Api
 
             app.MapGet("/studentTypeInfo", (HttpContext ctx) =>
                 {
-                    if (!ctx.User.Identities.Any(e => e.AuthenticationType == AuthScheme))
-                    {
-                        return Results.Forbid();
-                    }
-                    if (!ctx.User.HasClaim("UserType","Student"))
-                    {
-                        return Results.Forbid();
-                    }
-                    return Results.Ok();
-                });
+                    
+                    return Results.Ok("Student name: Gago");
+                }).RequireAuthorization("Only students");
 
             app.MapGet("/login", async (HttpContext ctx) =>
             {
                 var claim = new Claim("Email", "Karlos@gmail.com");
-                var claim1 = new Claim("UserType", "Student");
+                var claim1 = new Claim("usertype", "student");
                 var claimsIdentity = new ClaimsIdentity(new List<Claim>() { claim, claim1 }, AuthScheme);
                 var user = new ClaimsPrincipal(claimsIdentity);
                 ctx.SignInAsync(user);
                 return Results.Ok("Login successful");
-            });
+            }).AllowAnonymous();
 
 
             app.MapControllers();
