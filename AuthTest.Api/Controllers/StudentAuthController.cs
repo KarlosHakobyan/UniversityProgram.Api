@@ -7,11 +7,6 @@ namespace AuthTest.Api.Controllers
     [Route("[controller]")]
     public class StudentAuthController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         private readonly ILogger<StudentAuthController> _logger;
 
         public StudentAuthController(ILogger<StudentAuthController> logger)
@@ -25,5 +20,7 @@ namespace AuthTest.Api.Controllers
         {
             return Ok("Student : GAGO");
         }
+
+
     }
 }
