@@ -38,10 +38,24 @@ namespace AuthTest.Api
                 return ctx.User.FindFirst("email")?.Value;
             });
 
-            app.MapGet("/login",async (HttpContext ctx) =>
+            app.MapGet("/studentTypeInfo", (HttpContext ctx) =>
+                {
+                    if (!ctx.User.Identities.Any(e => e.AuthenticationType == AuthScheme))
+                    {
+                        return Results.Forbid();
+                    }
+                    if (!ctx.User.HasClaim("UserType","Student"))
+                    {
+                        return Results.Forbid();
+                    }
+                    return Results.Ok();
+                });
+
+            app.MapGet("/login", async (HttpContext ctx) =>
             {
                 var claim = new Claim("Email", "Karlos@gmail.com");
-                var claimsIdentity = new ClaimsIdentity(new List<Claim>(){ claim },AuthScheme);
+                var claim1 = new Claim("UserType", "Student");
+                var claimsIdentity = new ClaimsIdentity(new List<Claim>() { claim, claim1 }, AuthScheme);
                 var user = new ClaimsPrincipal(claimsIdentity);
                 ctx.SignInAsync(user);
                 return Results.Ok("Login successful");
@@ -52,7 +66,7 @@ namespace AuthTest.Api
 
             app.Run();
         }
-        
+
     }
 }
 
