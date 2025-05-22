@@ -1,7 +1,11 @@
 
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using UniversityProgram.Data;
 
 namespace AuthTest.Api
 {
@@ -16,16 +20,23 @@ namespace AuthTest.Api
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddScoped<IAuthorizationHandler, TestRequirementHandler>();
             builder.Services.AddAuthentication(AuthScheme).AddCookie(AuthScheme).AddCookie("UrishCookie"); // default authentication scheme.
+
+            builder.Services.AddDbContext<StudentDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("StudentDb")));
+
             builder.Services.AddAuthorization(options =>
             {
                 options.AddPolicy("Only Students", policy =>
                 {
                     policy.AddAuthenticationSchemes(AuthScheme)
                     .RequireAuthenticatedUser()
-                    .RequireClaim("usertype","student");
+                    .AddRequirements(new TestRequirement())
+                    .RequireClaim("usertype", "student");
+
                 });
             });
+            
 
 
 
@@ -51,7 +62,7 @@ namespace AuthTest.Api
                 {
                     
                     return Results.Ok("Student name: Gago");
-                }).RequireAuthorization("Only students");
+                }).RequireAuthorization("Only Students");
 
             app.MapGet("/login", async (HttpContext ctx) =>
             {
@@ -59,7 +70,7 @@ namespace AuthTest.Api
                 var claim1 = new Claim("usertype", "student");
                 var claimsIdentity = new ClaimsIdentity(new List<Claim>() { claim, claim1 }, AuthScheme);
                 var user = new ClaimsPrincipal(claimsIdentity);
-                ctx.SignInAsync(user);
+                await ctx.SignInAsync(AuthScheme, user);
                 return Results.Ok("Login successful");
             }).AllowAnonymous();
 
@@ -69,6 +80,38 @@ namespace AuthTest.Api
             app.Run();
         }
 
+        public class TestRequirement : IAuthorizationRequirement
+        {
+            public decimal Money { get; } = 3000;
+        }
+        
+        public class TestRequirementHandler : AuthorizationHandler<TestRequirement>
+        {
+            private readonly StudentDbContext _ctx;
+
+            public TestRequirementHandler(StudentDbContext ctx)
+            {
+                _ctx = ctx;
+            }   
+            protected override async Task HandleRequirementAsync(AuthorizationHandlerContext ctx, TestRequirement requirement)
+            {
+                var student = await _ctx.Students.FirstOrDefaultAsync(e=>e.Email==ctx.User.FindFirst("email")!.Value);
+                if (student==null)
+                {
+                   ctx.Fail();
+                   return;
+                }
+
+                if (student.Money >= requirement.Money)
+                {
+                    ctx.Succeed(requirement);
+                }
+                else
+                {
+                    ctx.Fail();
+                }
+            }
+        }
     }
 }
 
