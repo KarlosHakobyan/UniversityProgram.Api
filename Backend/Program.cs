@@ -23,7 +23,7 @@ namespace Backend
             }).AddJwtBearer(options =>
             {
                 options.Authority = builder.Configuration["Auth0:Authority"] ;
-                options.Audience = builder.Configuration["Auth0:Audience"];
+                options.Audience = builder.Configuration[ "Auth0:Audience"];
             });
 
             var app = builder.Build();
