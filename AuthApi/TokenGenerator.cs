@@ -21,8 +21,9 @@ namespace AuthApi
             {
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Sub.ToString(), email),
+                new Claim("email", email),
                 new Claim("usertype", "student"),
-                new Claim("role", role)
+                new Claim("roletype", role)
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor()

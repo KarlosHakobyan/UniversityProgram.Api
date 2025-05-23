@@ -14,10 +14,18 @@ namespace BankApi.Controllers
         }
 
         [HttpGet("get1")]
-        [Authorize]
+        [Authorize(policy: "EmailUser")]
         public int Get1()
         {
             return 500;
+        }
+
+
+        [HttpGet("admin")]
+        [Authorize(Roles = "admin")]
+        public int Get3()
+        {
+            return 5000;
         }
     }
 }
