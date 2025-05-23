@@ -42,6 +42,14 @@ builder.Services.AddAuthorization(options => options.AddPolicy("EmailUser", poli
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(x =>
     {
+        x.Events = new JwtBearerEvents();
+        x.Events.OnChallenge = context =>
+        {
+           context.HandleResponse();
+           context.Response.Redirect("http://localhost:5205/Tocken/login");
+           return Task.CompletedTask;
+        };
+
         x.TokenValidationParameters = new TokenValidationParameters
         {
             IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["IdentityKey"])),

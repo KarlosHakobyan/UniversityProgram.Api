@@ -7,9 +7,16 @@ namespace AuthApi.Controllers
     public class TockenController : ControllerBase
     {
         [HttpGet("login")]
-        public string Login([FromServices] TokenGenerator gtr)
+        public IActionResult Login([FromServices] TokenGenerator gtr)
         {
-            return gtr.Generate("karlos@gmail.com","admin");
+            var token = gtr.Generate("karlos@gmail.com","admin");
+            var accessToken = Save(token)
+            return Redirect($"http://localhost:5072/User/login?token={accessToken}"); // anvtang dzev.
+        }
+
+        public string Save(string token)
+        { 
+            return Guid.NewGuid().ToString();
         }
     }
 }
