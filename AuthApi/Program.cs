@@ -16,7 +16,7 @@ namespace AuthApi
 
             var key = builder.Configuration["IdentityKey"];
 
-            builder.Services.AddScoped<TockenGenerator>();
+            builder.Services.AddScoped<TokenGenerator>();
 
             var app = builder.Build();
 

@@ -7,7 +7,7 @@ namespace AuthApi.Controllers
     public class TockenController : ControllerBase
     {
         [HttpGet("login")]
-        public string Login([FromServices] TockenGenerator gtr)
+        public string Login([FromServices] TokenGenerator gtr)
         {
             return gtr.Generate("karlos@gmail.com","admin");
         }

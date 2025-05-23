@@ -5,11 +5,11 @@ using System.Text;
 
 namespace AuthApi
 {
-    public class TockenGenerator
+    public class TokenGenerator
     {
         private IConfiguration _configuration;
 
-        public TockenGenerator(IConfiguration configuration)
+        public TokenGenerator(IConfiguration configuration)
         {
             _configuration = configuration;
         }
