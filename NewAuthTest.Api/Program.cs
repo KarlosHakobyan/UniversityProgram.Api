@@ -24,7 +24,7 @@ namespace NewAuthTest.Api
                 e.User.RequireUniqueEmail = true;
                 e.Password.RequiredLength = 6;
                 e.Password.RequireDigit = true;
-                e.Password.RequireUppercase = true;
+                e.Password.RequireUppercase = true; 
                 e.Password.RequireLowercase = true;
             })
                .AddEntityFrameworkStores<IdentityDbContext>()
@@ -54,6 +54,21 @@ namespace NewAuthTest.Api
                 };
                 var result = await mng.CreateAsync(user, "Aa#123");
                 Console.WriteLine("AAA"); ;
+            });
+
+            app.MapGet("/seed2", async (ctx) =>
+            {
+                var rlMng = ctx.RequestServices.GetRequiredService<RoleManager<IdentityRole>>();
+                await rlMng.CreateAsync(new IdentityRole("student"));
+                var mng = ctx.RequestServices.GetRequiredService<UserManager<IdentityUser>>();
+                var user = new IdentityUser()
+                {
+                    UserName = "testuser1",
+                    Email = "testemail001@mail.ru"
+                };
+                var result = await mng.CreateAsync(user, "Aa#123");
+                var roleResult = await mng.AddToRoleAsync(user, "student");
+                
             });
 
             app.MapControllers();

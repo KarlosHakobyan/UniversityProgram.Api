@@ -18,6 +18,7 @@ namespace NewAuthTest.Api.Controllers
         public async Task Login([FromBody] UserModel model, [FromServices] SignInManager<IdentityUser> mng)
         {
             var result = await mng.PasswordSignInAsync(model.UserName, model.Password, false, false);
+            Console.WriteLine(User);
 
         }
 
