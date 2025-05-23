@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace AuthTest.Api.Controllers
@@ -33,24 +34,57 @@ namespace AuthTest.Api.Controllers
 
 
         public static string HashPassword(string password)
-        {   
-            using var sha256 = System.Security.Cryptography.SHA256.Create();
-            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+        {
+            var salt = new byte[16]; // Generate a random salt.
+            using (var rgn = RandomNumberGenerator.Create())
+            {
+                rgn.GetBytes(salt); //kecc patahakan kam psevdorandom tiv.
+            }
+            var hash = Rfc2898DeriveBytes.Pbkdf2(
+                password,
+                salt,
+                iterations: 350000,
+                outputLength: 32,
+                hashAlgorithm: HashAlgorithmName.SHA512); // Hash the password with the salt.
+            var hashedBytes = new byte[48];
+            Array.Copy(salt, 0, hashedBytes, 0, salt.Length); // Combine the salt and hash.
+            Array.Copy(hash, 0, hashedBytes, salt.Length, hash.Length);
             var hashedPassword = Convert.ToBase64String(hashedBytes);
-            return hashedPassword; 
+            return hashedPassword;
+        }
+
+        public static bool VerifyPassword(string password, string hash)
+        {
+            byte[] hashBytes = Convert.FromBase64String(hash);
+            byte[] salt = new byte[16];
+            Array.Copy(hashBytes, 0, salt, 0, salt.Length); // Extract the salt from the hash.
+            var newHash = Rfc2898DeriveBytes.Pbkdf2(
+                password,
+                salt,
+                iterations: 350000,
+                outputLength: 32,
+                hashAlgorithm: HashAlgorithmName.SHA512); // Hash the password with the salt.
+
+            for (int i = 0; i < newHash.Length; i++)
+            {
+                if (hashBytes[i + salt.Length] != newHash[i])
+                {
+                    return false; // The password is incorrect.
+                }
+            }
+            return true; // The password is correct.
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody]UserModel model)
-        {   var user = _ctx.Users.FirstOrDefault(u => u.Email == model.Email);
+        public IActionResult Login([FromBody] UserModel model)
+        {
+            var user = _ctx.Users.FirstOrDefault(u => u.Email == model.Email);
             if (user == null)
             {
                 return NotFound("User not found.");
             }
 
-            var passwordHash = HashPassword(model.Password);
-
-            if (user.PasswordHash != passwordHash)
+            if (!VerifyPassword(model.Password, user.PasswordHash))
             {
                 return Unauthorized("Invalid password.");
             }
@@ -82,7 +116,7 @@ namespace AuthTest.Api.Controllers
             return Ok("Test");
         }
 
-       
+
     }
 
     public class UserModel
