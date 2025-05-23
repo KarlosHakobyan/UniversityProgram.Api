@@ -1,4 +1,6 @@
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 namespace BankApi
 {
     public class Program
@@ -13,6 +15,13 @@ namespace BankApi
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = "https://localhost:5001/";
+                    options.RequireHttpsMetadata = false;
+                    options.Audience = "api1";
+                });
 
             var app = builder.Build();
 
@@ -23,6 +32,7 @@ namespace BankApi
                 app.UseSwaggerUI();
             }
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

@@ -13,7 +13,9 @@ namespace AuthApi
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            
+
+            var key = builder.Configuration["IdentityKey"];
+
             builder.Services.AddScoped<TockenGenerator>();
 
             var app = builder.Build();
