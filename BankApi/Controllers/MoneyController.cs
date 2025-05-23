@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankApi.Controllers
@@ -6,10 +7,17 @@ namespace BankApi.Controllers
     [Route("[controller]")]
     public class MoneyController : ControllerBase
     {
-
+        [HttpGet]
         public int Get()
         {
             return 50;
+        }
+
+        [HttpGet("get1")]
+        [Authorize]
+        public int Get1()
+        {
+            return 500;
         }
     }
 }

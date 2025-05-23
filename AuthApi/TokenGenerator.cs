@@ -7,23 +7,22 @@ namespace AuthApi
 {
     public class TokenGenerator
     {
-        private IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
 
         public TokenGenerator(IConfiguration configuration)
         {
             _configuration = configuration;
         }
-
-        public string Generate(string email,string role)
-        { 
-            var tockenHandler = new JwtSecurityTokenHandler();
+        public string Generate(string email, string role)
+        {
             var key = _configuration["IdentityKey"];
+            var tokenHandler = new JwtSecurityTokenHandler();
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Sub.ToString(), email),
                 new Claim("usertype", "student"),
-                new Claim("role",role)
+                new Claim("role", role)
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor()
@@ -37,10 +36,9 @@ namespace AuthApi
                     SecurityAlgorithms.HmacSha256Signature)
             };
 
-            var token = tockenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tockenHandler.WriteToken(token);
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
             return tokenString;
         }
-
     }
 }
