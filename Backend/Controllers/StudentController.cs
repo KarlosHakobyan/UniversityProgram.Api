@@ -21,7 +21,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet("Private")]
-        [Authorize]
+        [Authorize(Roles ="student")]
         public IActionResult Private()
         {
             var model = new StudentModel

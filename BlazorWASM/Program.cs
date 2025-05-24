@@ -25,6 +25,8 @@ builder.Services.AddOidcAuthentication(options =>
     options.ProviderOptions.ResponseType = "code";
 
     options.ProviderOptions.AdditionalProviderParameters.Add("audience", builder.Configuration["Auth0:Audience"]!);
+
+    options.UserOptions.RoleClaim = "https://www.aca.com/roles";
 });
 
 builder.Services.AddAuthorizationCore(options =>
