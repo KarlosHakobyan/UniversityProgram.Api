@@ -6,6 +6,8 @@ using BlazorWASM.Handlers;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Refit;
+using Polly;
+
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -19,17 +21,24 @@ builder.Services.AddRefitClient<IStudentApi>()
 {
     c.BaseAddress = new Uri("http://localhost:5146");
 })
-.AddHttpMessageHandler<CustomAuthMessageHandler>();
+.AddHttpMessageHandler<CustomAuthMessageHandler>()
+.AddTransientHttpErrorPolicy(p =>
+        p.WaitAndRetryAsync(3, attempt => TimeSpan.FromMilliseconds(Math.Pow(2, attempt))));
 
 /*builder.Services.AddHttpClient("ServerAPI",
       client => client.BaseAddress = new Uri("http://localhost:5146"))
-    .AddHttpMessageHandler<CustomAuthMessageHandler>();
+    .AddHttpMessageHandler<CustomAuthMessageHandler>().AddTransientHttpErrorPolicy(p =>
+     p.WaitAndRetryAsync(3, attempt => TimeSpan.FromMilliseconds(Math.Pow(2, attempt))));
 
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
   .CreateClient("ServerAPI"));
 
-builder.Services.AddHttpClient<StudentClient>("ServerAPI");
+builder.Services.AddHttpClient<StudentClient>("ServerAPI")
+.AddTransientHttpErrorPolicy(p =>
+ p.WaitAndRetryAsync(3, attempt => TimeSpan.FromMilliseconds(Math.Pow(2, attempt))));
 */
+
+
 builder.Services.AddOidcAuthentication(options =>
 {
     builder.Configuration.Bind("Auth0", options.ProviderOptions);

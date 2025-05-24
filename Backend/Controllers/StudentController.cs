@@ -12,6 +12,12 @@ namespace Backend.Controllers
 
         public IActionResult Open()
         {
+            var rand = new Random().Next(10);
+            if (rand % 2 == 0)
+            {
+                throw new Exception("Random exception");
+            }
+
             var model = new StudentModel
             {
                 Name = "Open Student",

@@ -14,7 +14,27 @@ namespace BlazorWASM.Client
 
         public async Task<StudentModel> Open()
         {
-            return await _client.GetFromJsonAsync<StudentModel>("Student/open");
+            int count = 0;
+            while (true)
+            {
+
+                try
+                {
+                    return await _client.GetFromJsonAsync<StudentModel>("Student/open");
+                }
+                catch (Exception)
+                {
+                    if (count <= 3)
+                    {
+                        count++;
+                        continue;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
         }
 
         public async Task<StudentModel> Private()
