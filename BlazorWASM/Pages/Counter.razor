@@ -1,4 +1,5 @@
 ﻿@page "/counter"﻿
+@using BlazorWASM.Client
 @using BlazorWASM.Models
 
 <PageTitle>Counter</PageTitle>
@@ -17,17 +18,34 @@
     </NotAuthorized>
 </AuthorizeView>
 
+<AuthorizeView Policy="namekarlos">
+    <Authorized>
+        NICKNAME POLICY
+    </Authorized>
+    <NotAuthorized>
+        <p> Please LogIn for watching info.</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+<AuthorizeView Roles="helloRole">
+    <Authorized>
+        HELLO ROLEPOLICY
+    </Authorized>
+    <NotAuthorized>
+        <p> Please LogIn for watching info.</p>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     private int currentCount = 0;
 
-    [Inject] private HttpClient httpClient { get; set; } = default!;
+    [Inject] private StudentClient client { get; set; } = default!;
     private async Task OpenStudent()
     {
         try
         {
-            var model1 = await httpClient.GetFromJsonAsync<StudentModel>("Student/open");
-            Console.WriteLine(model1!.Name);
+            var model1 = await client.Open();
+            Console.WriteLine(model1.Name);
         }
         catch (Exception ex)
         {
@@ -40,8 +58,8 @@
     {
         try
         {
-            var model2 = await httpClient.GetFromJsonAsync<StudentModel>("Student/private");
-            Console.WriteLine(model2!.Name);
+            var model2 = client.Private();
+            Console.WriteLine(model2);
         }
         catch (Exception ex)
         {

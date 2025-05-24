@@ -10,7 +10,7 @@ namespace AuthApi.Controllers
         public IActionResult Login([FromServices] TokenGenerator gtr)
         {
             var token = gtr.Generate("karlos@gmail.com","admin");
-            var accessToken = Save(token)
+            var accessToken = Save(token);
             return Redirect($"http://localhost:5072/User/login?token={accessToken}"); // anvtang dzev.
         }
 

@@ -18,6 +18,7 @@ namespace BlazorWASM.Handlers
             var tokenResult = await _provider.RequestAccessToken();
             if (tokenResult.TryGetToken(out var token))
             {
+                Console.WriteLine(token.Value);
                 request.Headers.Authorization =
                     new AuthenticationHeaderValue("Bearer", token.Value);
             }

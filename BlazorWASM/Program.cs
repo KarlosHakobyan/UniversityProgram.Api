@@ -1,4 +1,5 @@
 using BlazorWASM;
+using BlazorWASM.Client;
 using BlazorWASM.Handlers;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -13,8 +14,10 @@ builder.Services.AddHttpClient("ServerAPI",
       client => client.BaseAddress = new Uri("http://localhost:5146"))
     .AddHttpMessageHandler<CustomAuthMessageHandler>();
 
-builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
-  .CreateClient("ServerAPI"));
+/*builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
+  .CreateClient("ServerAPI"));*/
+
+builder.Services.AddHttpClient<StudentClient>("ServerAPI");
 
 builder.Services.AddOidcAuthentication(options =>
 {
@@ -22,6 +25,12 @@ builder.Services.AddOidcAuthentication(options =>
     options.ProviderOptions.ResponseType = "code";
 
     options.ProviderOptions.AdditionalProviderParameters.Add("audience", builder.Configuration["Auth0:Audience"]!);
+});
+
+builder.Services.AddAuthorizationCore(options =>
+{
+    options.AddPolicy("namekarlos", policy => policy.RequireClaim("nickname" , "karloshakobyan99"));
+    options.AddPolicy("User", policy => policy.RequireClaim("scope", "user"));
 });
 
 await builder.Build().RunAsync();
