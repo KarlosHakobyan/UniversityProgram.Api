@@ -1,5 +1,4 @@
 ﻿@page "/counter"
-@using BlazorWASM.Models
 
 <PageTitle>Counter</PageTitle>
 
@@ -7,45 +6,22 @@
 
 <p role="status">Current count: @currentCount</p>
 
-        <button class="btn btn-primary" @onclick="OpenStudent">Open</button>
 <AuthorizeView>
     <Authorized>
-        <button class="btn btn-primary" @onclick="PrivateStudent">Private</button>
+        <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
     </Authorized>
     <NotAuthorized>
         <p>You are not authorized to view this content. Please log in to access the counter functionality.</p>
-    </NotAuthorized>
+     </NotAuthorized>
 
 </AuthorizeView>
 
 
 @code {
     private int currentCount = 0;
-    [Inject] private HttpClient httpClient { get; set; } = default!;
 
-    private async Task OpenStudent()
+    private void IncrementCount()
     {
-        try
-        {
-            var model1 = await httpClient.GetFromJsonAsync<StudentModel>("Student/open");
-            Console.WriteLine(model1!.Name);
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
-    }
-
-    private async Task PrivateStudent()
-    {
-        try
-        {
-            var model2 = await httpClient.GetFromJsonAsync<StudentModel>("Student/private");
-            Console.WriteLine(model2!.Name);
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
+        currentCount++;
     }
 }
