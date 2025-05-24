@@ -1,8 +1,11 @@
 using BlazorWASM;
+using BlazorWASM.Apis;
 using BlazorWASM.Client;
+using BlazorWASM.Constants;
 using BlazorWASM.Handlers;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Refit;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -10,15 +13,23 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 
 builder.Services.AddScoped<CustomAuthMessageHandler>();
-builder.Services.AddHttpClient("ServerAPI",
+
+builder.Services.AddRefitClient<IStudentApi>()
+.ConfigureHttpClient(c =>
+{
+    c.BaseAddress = new Uri("http://localhost:5146");
+})
+.AddHttpMessageHandler<CustomAuthMessageHandler>();
+
+/*builder.Services.AddHttpClient("ServerAPI",
       client => client.BaseAddress = new Uri("http://localhost:5146"))
     .AddHttpMessageHandler<CustomAuthMessageHandler>();
 
-/*builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
-  .CreateClient("ServerAPI"));*/
+builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
+  .CreateClient("ServerAPI"));
 
 builder.Services.AddHttpClient<StudentClient>("ServerAPI");
-
+*/
 builder.Services.AddOidcAuthentication(options =>
 {
     builder.Configuration.Bind("Auth0", options.ProviderOptions);
@@ -26,13 +37,13 @@ builder.Services.AddOidcAuthentication(options =>
 
     options.ProviderOptions.AdditionalProviderParameters.Add("audience", builder.Configuration["Auth0:Audience"]!);
 
-    options.UserOptions.RoleClaim = "https://www.aca.com/roles";
+    options.UserOptions.RoleClaim = AuthConstants.RoleType ;
 });
 
 builder.Services.AddAuthorizationCore(options =>
 {
-    options.AddPolicy("namekarlos", policy => policy.RequireClaim("nickname" , "karloshakobyan99"));
-    options.AddPolicy("User", policy => policy.RequireClaim("scope", "user"));
+    options.AddPolicy(AuthConstants.NamePolicy, policy => policy.RequireClaim("nickname", "karloshakobyan99"));
+ 
 });
 
 await builder.Build().RunAsync();

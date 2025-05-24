@@ -1,5 +1,7 @@
 ﻿@page "/counter"﻿
+@using BlazorWASM.Apis
 @using BlazorWASM.Client
+@using BlazorWASM.Constants
 @using BlazorWASM.Models
 
 <PageTitle>Counter</PageTitle>
@@ -11,23 +13,23 @@
 <button class="btn btn-primary" @onclick="OpenStudent">Open Student</button>
 <AuthorizeView>
     <Authorized>
-        <button class="btn btn-primary" @onclick="PrivateStudent">Private Student</button>
+        <button class="btn btn-primary" @onclick="PrivateStudent" >Private Student</button>
     </Authorized>
     <NotAuthorized>
         <p> Please LogIn for watching info.</p>
     </NotAuthorized>
 </AuthorizeView>
 
-<AuthorizeView Policy="namekarlos">
-    <Authorized>
-        NICKNAME POLICY
+<AuthorizeView Policy=@AuthConstants.NamePolicy>
+    <Authorized>       
+        <button class="btn btn-primary" @onclick="AddStudent" >Add Student</button>
     </Authorized>
     <NotAuthorized>
         <p> Incorrect nickname.</p>
     </NotAuthorized>
 </AuthorizeView>
 
-<AuthorizeView Roles="student">
+<AuthorizeView Roles=@AuthConstants.StudentRole>
     <Authorized>
         HELLO ROLEPOLICY
     </Authorized>
@@ -39,12 +41,12 @@
 @code {
     private int currentCount = 0;
 
-    [Inject] private StudentClient client { get; set; } = default!;
+    [Inject] private IStudentApi client { get; set; } = default!;
     private async Task OpenStudent()
     {
         try
         {
-            var model1 = await client.Open();
+            var model1 = await client.GetOpenModel();
             Console.WriteLine(model1.Name);
         }
         catch (Exception ex)
@@ -58,12 +60,25 @@
     {
         try
         {
-            var model2 = client.Private();
-            Console.WriteLine(model2);
+            var model2 = await client.GetPrivateStudentModel();
+            Console.WriteLine(model2.Name);
         }
         catch (Exception ex)
         {
             throw;
         }
+    }
+
+    private async Task AddStudent()
+    {
+        var source = new CancellationTokenSource();
+        source.CancelAfter(TimeSpan.FromSeconds(5));
+        var token = source.Token;
+        var result = await client.AddStudent(new StudentModel
+        {
+            Name= "Gago",
+            Id = 15,           
+        },token);    
+        Console.WriteLine(result.Name);
     }
 }
