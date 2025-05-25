@@ -1,4 +1,6 @@
 
+using StudentApiForMediator.Data;
+
 namespace StudentApiForMediator
 {
     public class Program
@@ -14,6 +16,7 @@ namespace StudentApiForMediator
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddMediator(e=>e.ServiceLifetime= ServiceLifetime.Scoped);
+            builder.Services.AddSingleton<Database>();
 
 
             var app = builder.Build();

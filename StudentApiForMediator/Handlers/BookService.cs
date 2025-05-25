@@ -11,7 +11,7 @@ namespace StudentApiForMediator.Services
             _database = database;
         }
 
-        public void AddBook(int id,int studentId)
+        public void AddBook(int id, int studentId)
         {
             var book = _database.Books.FirstOrDefault(b => b.Id == id);
             if (book == null)
@@ -25,4 +25,5 @@ namespace StudentApiForMediator.Services
             }
             book.Students.Add(student);
         }
+    }
 }
