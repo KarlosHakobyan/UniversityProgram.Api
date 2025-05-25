@@ -29,19 +29,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniversityProgramBlazor.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthTest.Api", "AuthTest.Api\AuthTest.Api.csproj", "{957A2773-B99A-4FEF-B5DB-CFE4C5BE543A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewAuthTest.Api", "NewAuthTest.Api\NewAuthTest.Api.csproj", "{54235F7E-7CB4-44B7-8B39-5129BCD4440F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewAuthTest.Api", "NewAuthTest.Api\NewAuthTest.Api.csproj", "{54235F7E-7CB4-44B7-8B39-5129BCD4440F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JWT", "JWT", "{14AC3F53-BFA9-472B-B305-58224F7CD760}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthApi", "AuthApi\AuthApi.csproj", "{B285D287-A6D9-4388-8AB9-2AFBB087BA13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthApi", "AuthApi\AuthApi.csproj", "{B285D287-A6D9-4388-8AB9-2AFBB087BA13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankApi", "BankApi\BankApi.csproj", "{550198FE-EE0D-4385-9BC0-7292B2178625}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankApi", "BankApi\BankApi.csproj", "{550198FE-EE0D-4385-9BC0-7292B2178625}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Auth0", "Auth0", "{8DF0A772-029C-4A0D-84AA-4E79396EA3A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend", "Backend\Backend.csproj", "{560C1BB8-7560-4F40-A851-09E2D402641F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend", "Backend\Backend.csproj", "{560C1BB8-7560-4F40-A851-09E2D402641F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWASM", "BlazorWASM\BlazorWASM.csproj", "{24EF0B60-3A32-4E6D-9310-45BF8AEF52D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWASM", "BlazorWASM\BlazorWASM.csproj", "{24EF0B60-3A32-4E6D-9310-45BF8AEF52D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudentApiForMediator", "StudentApiForMediator\StudentApiForMediator.csproj", "{15EAE1EB-4353-47AC-9ED7-DF1F210A9ECC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -121,6 +123,10 @@ Global
 		{24EF0B60-3A32-4E6D-9310-45BF8AEF52D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24EF0B60-3A32-4E6D-9310-45BF8AEF52D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24EF0B60-3A32-4E6D-9310-45BF8AEF52D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15EAE1EB-4353-47AC-9ED7-DF1F210A9ECC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15EAE1EB-4353-47AC-9ED7-DF1F210A9ECC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15EAE1EB-4353-47AC-9ED7-DF1F210A9ECC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15EAE1EB-4353-47AC-9ED7-DF1F210A9ECC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
